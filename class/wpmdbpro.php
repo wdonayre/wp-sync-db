@@ -2494,6 +2494,16 @@ class WPMDBPro extends WPMDBPro_Base {
 			'migration_cancellation_failed' => __( "Migration cancellation failed", 'wp-migrate-db-pro' ),
 			'manually_remove_temp_files' => __( "A problem occurred while cancelling the migration, you may have to manually delete some temporary files / tables.", 'wp-migrate-db-pro' ),
 			'migration_cancelled' => __( "Migration cancelled", 'wp-migrate-db-pro' ),
+			'migration_complete' => __( "Migration complete", 'wp-migrate-db-pro' ),
+			'finalizing_migration' => __( "Finalizing migration", 'wp-migrate-db-pro' ),
+			'blacklist_problem'	=> __( "A problem occurred when trying to add plugins to backlist.", 'wp-migrate-db-pro' ),
+			'mu_plugin_confirmation' => __( "If confirmed we will install an additional WordPress 'Must Use' plugin. This plugin will allow us to control which plugins are loaded during WP Migrate DB Pro specific operations. Do you wish to continue?", 'wp-migrate-db-pro' ),
+			'plugin_compatibility_settings_problem' => __( "A problem occurred when trying to change the plugin compatibility setting.", 'wp-migrate-db-pro' ),
+			'sure' => __( "Sure?", 'wp-migrate-db-pro' ),
+			'pull_migration_label_migrating' => __( 'Pulling from %s, please wait...', 'wp-migrate-db-pro' ),
+			'pull_migration_label_completed' => __( 'Pulling from %s complete', 'wp-migrate-db-pro' ),
+			'push_migration_label_migrating' => __( 'Pushing to %s, please wait...', 'wp-migrate-db-pro' ),
+			'push_migration_label_completed' => __( 'Pushing to %s complete', 'wp-migrate-db-pro' ),
 		) );
 
 		wp_enqueue_script( 'jquery' );

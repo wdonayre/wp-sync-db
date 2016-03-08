@@ -155,19 +155,25 @@ var execute_next_step;
 		return domain;
 	}
 
-	function get_default_profile_name( url, intent, ing_suffix ){
+	function get_migration_status_label( url, intent, stage ){
 		var domain = get_domain_name(url);
-		var action = intent;
-		action = action.charAt(0).toUpperCase() + action.slice(1);
-		if( ing_suffix ){
-			action += 'ing';
-		}
-		var preposition = 'to';
-		if( intent == 'pull' ){
-			preposition = 'from';
+		var migrating_stage_label, completed_stage_label;
+		if ( intent == 'pull' ) {
+			migrating_stage_label = wpmdb_i10n.pull_migration_label_migrating;
+			completed_stage_label = wpmdb_i10n.pull_migration_label_completed;
+		} else {
+			migrating_stage_label = wpmdb_i10n.push_migration_label_migrating;
+			completed_stage_label = wpmdb_i10n.push_migration_label_completed;
 		}
 
-		return profile_name = action + ' ' + preposition + ' ' + domain;
+		migrating_stage_label = migrating_stage_label.replace( '%s', domain );
+		completed_stage_label = completed_stage_label.replace( '%s', domain );
+
+		if ( 'migrating' == stage ) {
+			return migrating_stage_label;
+		} else {
+			return completed_stage_label;
+		}
 	}
 
 	function remove_protocol( url ) {
@@ -867,8 +873,8 @@ var execute_next_step;
 				static_migration_label = wpmdb_i10n.exporting_please_wait;
 			}
 			else{
-				static_migration_label = get_default_profile_name(remote_site, migration_intent, true) + ', ' + wpmdb_i10n.please_wait;
-				completed_msg = get_default_profile_name(remote_site, migration_intent, true) + ' ' + wpmdb_i10n.complete;
+				static_migration_label = get_migration_status_label(remote_site, migration_intent, 'migrating');
+				completed_msg = get_migration_status_label(remote_site, migration_intent, 'completed');
 			}
 
 			$('.progress-title').html(static_migration_label);
