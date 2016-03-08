@@ -503,19 +503,16 @@ class WPMDBPro extends WPMDBPro_Base {
 		$data['sig'] = $this->create_signature( $data, $_POST['key'] );
 		$ajax_url = trailingslashit( $_POST['url'] ) . 'wp-admin/admin-ajax.php';
 		$timeout = apply_filters( 'wpmdb_prepare_remote_connection_timeout', 10 );
-		$response = $this->remote_post( $ajax_url, $data, __FUNCTION__, compact( 'timeout' ), true );
+		$serialized_response = $this->remote_post( $ajax_url, $data, __FUNCTION__, compact( 'timeout' ), true );
 		$url_bits = parse_url( $this->attempting_to_connect_to );
-		$return = $response;
 
-		$alt_action = '';
-
-		if ( false === $response ) {
+		if ( false === $serialized_response ) {
 			$return = array( 'wpmdb_error' => 1, 'body' => $this->error );
 			$result = $this->end_ajax( json_encode( $return ) );
 			return $result;
 		}
 
-		$response = unserialize( trim( $response ) );
+		$response = unserialize( trim( $serialized_response ) );
 
 		if ( false === $response ) {
 			$error_msg = __( 'Failed attempting to unserialize the response from the remote server. Please contact support.', 'wp-migrate-db' );
@@ -921,8 +918,9 @@ class WPMDBPro extends WPMDBPro_Base {
 		ob_start();
 		$addons_available = ( $decoded_response['addons_available'] == '1' );
 		if ( ! $addons_available ) { ?>
-			<p class="inline-message warning"><strong><?php _e( 'Addons Unavailable', 'wp-migrate-db' ); ?></strong> &ndash; <?php _e( 'Addons are not included with the Personal license. Visit <a href="https://deliciousbrains.com/my-account/" target="_blank">My Account</a> to upgrade in just a few clicks.', 'wp-migrate-db' ); ?></p>
-			<?php
+			<p class="inline-message warning">
+				<strong><?php _e( 'Addons Unavailable', 'wp-migrate-db' ); ?></strong> &ndash; <?php printf( __( 'Addons are not included with the Personal license. Visit <a href="%s" target="_blank">My Account</a> to upgrade in just a few clicks.', 'wp-migrate-db' ), 'https://deliciousbrains.com/my-account/' ); ?>
+			</p><?php
 		}
 
 		// Save the addons list for use when installing
@@ -1023,7 +1021,7 @@ class WPMDBPro extends WPMDBPro_Base {
 	function ajax_finalize_migration() {
 		$this->check_ajax_referer( 'finalize-migration' );
 		global $wpdb;
-		$return = '';
+
 		if ( $_POST['intent'] == 'pull' ) {
 			$return = $this->finalize_migration();
 		} else {
@@ -1056,10 +1054,10 @@ class WPMDBPro extends WPMDBPro_Base {
 		global $wpdb;
 
 		$tables = explode( ',', $_POST['tables'] );
+		$temp_prefix = stripslashes( $_POST['temp_prefix'] );
 		$temp_tables = array();
 
 		foreach ( $tables as $table ) {
-			$temp_prefix = stripslashes( $_POST['temp_prefix'] );
 			$temp_tables[] = $temp_prefix . $table;
 		}
 
