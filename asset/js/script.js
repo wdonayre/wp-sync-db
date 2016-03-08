@@ -51,11 +51,11 @@ var execute_next_step;
 
 			// For IE and Firefox prior to version 4
 			if (e) {
-				e.returnValue = 'Sure?';
+				e.returnValue = wpmdb_i10n.sure;
 			}
 
 			// For Safari
-			return 'Sure?';
+			return wpmdb_i10n.sure;
 		}
 	};
 
@@ -179,8 +179,7 @@ var execute_next_step;
 		$('#plugin-compatibility').change(function(e){
 			var install = '1';
 			if ( $(this).is(':checked') ) {
-				// replace with l10n string when available
-				var answer = confirm('If confirmed we will install an additional WordPress "Must Use" plugin. This plugin will allow us to control which plugins are loaded during WP Migrate DB Pro specific operations. Do you wish to continue?');
+				var answer = confirm( wpmdb_i10n.mu_plugin_confirmation );
 
 				if( ! answer ){
 					$(this).prop('checked',false);
@@ -207,8 +206,7 @@ var execute_next_step;
 					install 				: install,
 				},
 				error: function(jqXHR, textStatus, errorThrown){
-					// replace with l10n string when available
-					alert( 'A problem occurred when trying to change the plugin compatibility setting.\r\n\r\nStatus: ' + jqXHR.status + ' ' + jqXHR.statusText + '\r\n\r\nResponse:\r\n' + jqXHR.responseText );
+					alert( wpmdb_i10n.plugin_compatibility_settings_problem + '\r\n\r\n' + wpmdb_i10n.status + ' ' + jqXHR.status + ' ' + jqXHR.statusText + '\r\n\r\n' + wpmdb_i10n.response + '\r\n' + jqXHR.responseText );
 					$('.ajax-spinner').remove();
 					$('#plugin-compatibility').removeAttr('disabled');
 					$('.plugin-compatibility').removeClass('disabled');
@@ -218,7 +216,7 @@ var execute_next_step;
 						alert( data );
 					}
 					else {
-						$('.plugin-compatibility').append('<span class="ajax-success-msg">Saved</span>');
+						$('.plugin-compatibility').append('<span class="ajax-success-msg">' + wpmdb_i10n.saved + '</span>');
 						$('.ajax-success-msg').fadeOut(2000,function(){
 							$(this).remove();
 						});
@@ -396,7 +394,7 @@ var execute_next_step;
 				},
 				error: function(jqXHR, textStatus, errorThrown){
 					$('.connection-status').html( wpmdb_i10n.connection_local_server_problem + ' (#102)' );
-					$('.connection-status').append( '<br /><br />Status: ' + jqXHR.status + ' ' + jqXHR.statusText + '<br /><br />Response:<br />' + jqXHR.responseText );
+					$('.connection-status').append( '<br /><br />' + wpmdb_i10n.status + ': ' + jqXHR.status + ' ' + jqXHR.statusText + '<br /><br />' + wpmdb_i10n.response + '<br />' + jqXHR.responseText );
 					$('.connection-status').addClass( 'notification-message error-notice migration-error' );
 					$('.ajax-spinner').remove();
 					doing_ajax = false;
@@ -1014,9 +1012,9 @@ var execute_next_step;
 					nonce		:	wpmdb_nonces.initiate_migration,
 				},
 				error: function(jqXHR, textStatus, errorThrown){
-					$('.progress-title').html('Migration failed');
+					$('.progress-title').html(wpmdb_i10n.migration_failed);
 					$('.progress-text').html( wpmdb_i10n.connection_local_server_problem + ' (#112)' );
-					$('.progress-text').append( '<br /><br />Status: ' + jqXHR.status + ' ' + jqXHR.statusText + '<br /><br />Response:<br />' + jqXHR.responseText );
+					$('.progress-text').append( '<br /><br />' + wpmdb_i10n.status + ': ' + jqXHR.status + ' ' + jqXHR.statusText + '<br /><br />' + wpmdb_i10n.response + ':<br />' + jqXHR.responseText );
 					$('.progress-text').addClass( 'migration-error' );
 					console.log( jqXHR );
 					console.log( textStatus );
@@ -1147,7 +1145,7 @@ var execute_next_step;
 							timeout:	0,
 							data:		request_data,
 							error: function(jqXHR, textStatus, errorThrown){
-								$('.progress-title').html('Migration failed');
+								$('.progress-title').html(wpmdb_i10n.migration_failed);
 								$('.progress-text').html( wpmdb_i10n.table_process_problem + ' ' + tables_to_migrate[i] );
 								$('.progress-text').append( '<br /><br />' + wpmdb_i10n.status + ': ' + jqXHR.status + ' ' + jqXHR.statusText + '<br /><br />' + wpmdb_i10n.response + ':<br />' + jqXHR.responseText );
 								$('.progress-text').addClass( 'migration-error' );
@@ -1164,7 +1162,7 @@ var execute_next_step;
 								data = $.trim( data );
 								row_information = wpmdb_parse_json( data );
 								if( false == row_information || null == row_information ){
-									$('.progress-title').html('Migration failed');
+									$('.progress-title').html(wpmdb_i10n.migration_failed);
 									if( '' == data || null == data ) {
 										$('.progress-text').html( wpmdb_i10n.table_process_problem_empty_response + ' ' + tables_to_migrate[i] );
 									}
@@ -1178,7 +1176,7 @@ var execute_next_step;
 								}
 
 								if( typeof row_information.wpmdb_error != 'undefined' && row_information.wpmdb_error == 1 ){
-									$('.progress-title').html('Migration failed');
+									$('.progress-title').html(wpmdb_i10n.migration_failed);
 									$('.progress-text').addClass( 'migration-error' );
 									$('.progress-text').html( row_information.body );
 									migration_error = true;
@@ -1262,7 +1260,7 @@ var execute_next_step;
 			$('.migration-controls').fadeOut();
 			if( migration_intent == 'savefile' ){
 				currently_migrating = false;
-				var migrate_complete_text = 'Migration complete';
+				var migrate_complete_text = wpmdb_i10n.migration_complete;
 				if( $('#save_computer').is(':checked') ){
 					var url = wpmdb_this_download_url + encodeURIComponent( dump_filename );
 					if( $('#gzip_file').is(':checked') ){
@@ -1282,7 +1280,7 @@ var execute_next_step;
 
 			}
 			else{ // rename temp tables, delete old tables
-				$('.progress-text').html('Finalizing migration');
+				$('.progress-text').html( wpmdb_i10n.finalizing_migration );
 				$.ajax({
 					url: 		ajaxurl,
 					type: 		'POST',
@@ -1830,8 +1828,7 @@ var execute_next_step;
 					blacklist_plugins		: $(select_element).val(),
 				},
 				error: function(jqXHR, textStatus, errorThrown){
-					// replace with l10n string when available
-					alert( 'A problem occurred when trying to add plugins to backlist.\r\n\r\nStatus: ' + jqXHR.status + ' ' + jqXHR.statusText + '\r\n\r\nResponse:\r\n' + jqXHR.responseText );
+					alert( wpmdb_i10n.blacklist_problem + '\r\n\r\n' + wpmdb_i10n.status + ' ' + jqXHR.status + ' ' + jqXHR.statusText + '\r\n\r\n' + wpmdb_i10n.response + '\r\n' + jqXHR.responseText );
 					$(select_element).removeAttr('disabled');
 					$('.plugin-compatibility-save').removeClass('disabled');
 					doing_plugin_compatibility_ajax = false;
@@ -2108,7 +2105,7 @@ var execute_next_step;
 				},
 				error: function(jqXHR, textStatus, errorThrown){
 					$('.connection-status').html( wpmdb_i10n.connection_local_server_problem + ' (#100)' );
-					$('.connection-status').append( '<br /><br />Status: ' + jqXHR.status + ' ' + jqXHR.statusText + '<br /><br />Response:<br />' + jqXHR.responseText );
+					$('.connection-status').append( '<br /><br />' + wpmdb_i10n.status + ': ' + jqXHR.status + ' ' + jqXHR.statusText + '<br /><br />' + wpmdb_i10n.response + ':<br />' + jqXHR.responseText );
 					$('.connection-status').addClass( 'notification-message error-notice migration-error' );
 					$('.ajax-spinner').remove();
 					doing_ajax = false;
@@ -2307,7 +2304,7 @@ var execute_next_step;
 					error: function(jqXHR, textStatus, errorThrown){
 						$('.progress-title').html(wpmdb_i10n.migration_cancellation_failed);
 						$('.progress-text').html(wpmdb_i10n.manually_remove_temp_files);
-						$('.progress-text').append( '<br /><br />Status: ' + jqXHR.status + ' ' + jqXHR.statusText + '<br /><br />Response:<br />' + jqXHR.responseText );
+						$('.progress-text').append( '<br /><br />' + wpmdb_i10n.status + ': ' + jqXHR.status + ' ' + jqXHR.statusText + '<br /><br />' + wpmdb_i10n.response + ':<br />' + jqXHR.responseText );
 						$('.progress-text').addClass( 'migration-error' );
 						console.log( jqXHR );
 						console.log( textStatus );
