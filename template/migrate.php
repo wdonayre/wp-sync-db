@@ -67,8 +67,9 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 
 			<ul class="option-group migrate-selection">
 				<li>
-					<label for="savefile">
-					<input id="savefile" type="radio" value="savefile" name="action"<?php echo ( $loaded_profile['action'] == 'savefile' ? ' checked="checked"' : ''  ); ?> />
+					<?php $savefile_style = ( true == $this->is_pro ) ? '' : ' style="display: none;"'; ?>
+					<label for="savefile"<?php echo $savefile_style; ?>>
+					<input id="savefile" type="radio" value="savefile" name="action"<?php echo ( $loaded_profile['action'] == 'savefile' || ! $this->is_pro ) ? ' checked="checked"' : ''; ?> />
 					<?php _e( 'Export File', 'wp-migrate-db' ); ?>
 					</label>
 					<ul>
@@ -88,24 +89,7 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 						<?php endif; ?>
 					</ul>
 				</li>
-				<li class="pull-list">
-					<label for="pull"<?php echo ( $this->is_valid_licence() ) ? '' : ' class="disabled"'; ?>>
-					<input id="pull" type="radio" value="pull" name="action"<?php echo ( $loaded_profile['action'] == 'pull' ? ' checked="checked"' : ''  ); ?><?php echo ( $this->is_valid_licence() ) ? '' : ' disabled="disabled"'; ?> />
-					<?php _e( 'Pull', 'wp-migrate-db' ); ?><span class="option-description"><?php _e( 'Replace this site\'s db with remote db', 'wp-migrate-db' ); ?></span>
-					</label>
-					<ul>
-						<li></li>
-					</ul>
-				</li>
-				<li class="push-list">
-					<label for="push"<?php echo ( $this->is_valid_licence() ) ? '' : ' class="disabled"'; ?>>
-					<input id="push" type="radio" value="push" name="action"<?php echo ( $loaded_profile['action'] == 'push' ? ' checked="checked"' : ''  ); ?><?php echo ( $this->is_valid_licence() ) ? '' : ' disabled="disabled"'; ?> />
-					<?php _e( 'Push', 'wp-migrate-db' ); ?><span class="option-description"><?php _e( 'Replace remote db with this site\'s db', 'wp-migrate-db' ); ?></span>
-					</label>
-					<ul>
-						<li></li>
-					</ul>
-				</li>
+				<?php $this->template_part( array( 'pull_push_radio_buttons' ), $loaded_profile ); ?>
 			</ul>
 
 			<div class="connection-info-wrapper clearfix">
@@ -122,9 +106,7 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 				<strong><?php _e( 'SSL Disabled', 'wp-migrate-db' ); ?></strong> &mdash; <?php _e( 'We couldn\'t connect over SSL but regular http (no SSL) appears to be working so we\'ve switched to that. If you run a push or pull, your data will be transmitted unencrypted. Most people are fine with this, but just a heads up.', 'wp-migrate-db' ); ?>
 			</div>
 
-			<?php if ( !$this->is_valid_licence() ) {
-				echo '<div class="notification-message warning-notice inline-message invalid-licence">' . $this->get_licence_status_message() . '</div>';
-			} ?>
+			<?php $this->template_part( array( 'invalid_licence_warning' ) ); ?>
 
 		</div>
 
@@ -170,20 +152,21 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 						</td>
 					</tr>
 					<?php if( $is_default_profile ) : ?>
-						<tr class="replace-row ui-state-default">
+						<tr class="replace-row ui-state-default<?php echo ( $this->lock_url_find_replace_row ) ? ' pin' : ''; ?>">
 							<td class="sort-handle-col">
 								<span class="sort-handle"></span>
 							</td>
 							<td class="old-replace-col">
-								<input type="text" size="40" name="replace_old[]" class="code" id="old-url" placeholder="Old URL" value="<?php echo preg_replace( '#^https?:#', '', htmlentities( home_url() ) ); ?>" autocomplete="off" />
+								<input type="text" size="40" name="replace_old[]" class="code" id="old-url" placeholder="Old URL" value="<?php echo preg_replace( '#^https?:#', '', htmlentities( home_url() ) ); ?>" autocomplete="off"<?php echo ( $this->lock_url_find_replace_row ) ? ' readonly' : ''; ?> />
 							</td>
 							<td class="arrow-col">
 								<span class="right-arrow">&rarr;</span>
 							</td>
 							<td class="replace-right-col">
 								<input type="text" size="40" name="replace_new[]" class="code" id="new-url" placeholder="New URL" autocomplete="off" />
-								<!-- <span class="replace-remove-row"></span> -->
+								<?php if ( ! $this->lock_url_find_replace_row ) : ?>
 								<span style="display: none;" class="replace-remove-row" data-profile-id="0"></span>
+								<?php endif; ?>
 							</td>
 						</tr>
 						<tr class="replace-row ui-state-default">
@@ -204,19 +187,21 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 					<?php else :
 						$i = 1;
 						foreach( $loaded_profile['replace_old'] as $replace_old ) : ?>
-							<tr class="replace-row ui-state-default">
+							<tr class="replace-row ui-state-default<?php echo ( 1 == $i && $this->lock_url_find_replace_row ) ? ' pin' : ''; ?>">
 								<td class="sort-handle-col">
 									<span class="sort-handle"></span>
 								</td>
 								<td class="old-replace-col">
-									<input type="text" size="40" name="replace_old[]" class="code" placeholder="Old value" value="<?php echo $replace_old; ?>" autocomplete="off" />
+									<input type="text" size="40" name="replace_old[]" class="code" placeholder="Old value" value="<?php echo $replace_old; ?>" autocomplete="off"<?php echo ( 1 == $i && $this->lock_url_find_replace_row ) ? ' readonly' : ''; ?> />
 								</td>
 								<td class="arrow-col">
 									<span class="right-arrow">&rarr;</span>
 								</td>
 								<td class="replace-right-col">
 									<input type="text" size="40" name="replace_new[]" class="code" placeholder="New value" value="<?php echo ( isset( $loaded_profile['replace_new'][$i] ) ? $loaded_profile['replace_new'][$i] : '' ); ?>" autocomplete="off" />
+									<?php if ( ! $this->lock_url_find_replace_row || ( $this->lock_url_find_replace_row && $i != 1 ) ) : ?>
 									<span style="display: none;" class="replace-remove-row" data-profile-id="0"></span>
+									<?php endif; ?>
 								</td>
 							</tr>
 						<?php
@@ -234,79 +219,7 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 
 			</div>
 
-			<div class="option-section">
-				<?php $tables = $this->get_table_sizes(); ?>
-				<div class="header-expand-collapse clearfix">
-					<div class="expand-collapse-arrow collapsed">&#x25BC;</div>
-					<div class="option-heading tables-header">Tables</div>
-				</div>
-
-				<div class="indent-wrap expandable-content table-select-wrap" style="display: none;">
-
-					<ul class="option-group table-migrate-options">
-						<li>
-							<label for="migrate-only-with-prefix">
-							<input id="migrate-only-with-prefix" class="multiselect-toggle" type="radio" value="migrate_only_with_prefix" name="table_migrate_option"<?php echo ( $loaded_profile['table_migrate_option'] == 'migrate_only_with_prefix' ? ' checked="checked"' : '' ); ?> />
-							<?php _e( 'Migrate all tables with prefix', 'wp-migrate-db' ); ?> "<span class="table-prefix"><?php echo $wpdb->prefix; ?></span>"
-							</label>
-						</li>
-						<li>
-							<label for="migrate-selected">
-							<input id="migrate-selected" class="multiselect-toggle show-multiselect" type="radio" value="migrate_select" name="table_migrate_option"<?php echo ( $loaded_profile['table_migrate_option'] == 'migrate_select' ? ' checked="checked"' : '' ); ?> />
-							<?php _e( 'Migrate only selected tables below', 'wp-migrate-db' ); ?>
-							</label>
-						</li>
-					</ul>
-
-					<div class="select-tables-wrap select-wrap">
-						<select multiple="multiple" name="select_tables[]" id="select-tables" class="multiselect" autocomplete="off">
-						<?php foreach( $tables as $table => $size ) :
-							$size = (int) $size * 1024;
-							if( ! empty( $loaded_profile['select_tables'] ) && in_array( $table, $loaded_profile['select_tables'] ) ){
-								printf( '<option value="%1$s" selected="selected">%1$s (%2$s)</option>', $table, size_format( $size ) );
-							}
-							else{
-								printf( '<option value="%1$s">%1$s (%2$s)</option>', $table, size_format( $size ) );
-							}
-						endforeach; ?>
-						</select>
-						<br />
-						<a href="#" class="multiselect-select-all js-action-link"><?php _e( 'Select All', 'wp-migrate-db' ); ?></a>
-						<span class="select-deselect-divider">/</span>
-						<a href="#" class="multiselect-deselect-all js-action-link"><?php _e( 'Deselect All', 'wp-migrate-db' ); ?></a>
-						<span class="select-deselect-divider">/</span>
-						<a href="#" class="multiselect-invert-selection js-action-link"><?php _e( 'Invert Selection', 'wp-migrate-db' ); ?></a>
-					</div>
-				</div>
-			</div>
-
-			<div class="option-section" style="display: block;">
-				<label for="exclude-post-types" class="exclude-post-types-checkbox checkbox-label">
-				<input type="checkbox" id="exclude-post-types" value="1" autocomplete="off" name="exclude_post_types"<?php $this->maybe_checked( $loaded_profile['exclude_post_types'] ); ?> />
-				<?php _e( 'Exclude Post Types', 'wp-migrate-db' ); ?>
-				</label>
-
-				<div class="indent-wrap expandable-content post-type-select-wrap" style="display: none;">
-					<div class="select-post-types-wrap select-wrap">
-						<select multiple="multiple" name="select_post_types[]" id="select-post-types" class="multiselect" autocomplete="off">
-						<?php foreach( $this->get_post_types() as $post_type ) :
-							if( ! empty( $loaded_profile['select_post_types'] ) && in_array( $post_type, $loaded_profile['select_post_types'] ) ){
-								printf( '<option value="%1$s" selected="selected">%1$s</option>', $post_type );
-							}
-							else{
-								printf( '<option value="%1$s">%1$s</option>', $post_type );
-							}
-						endforeach; ?>
-						</select>
-						<br />
-						<a href="#" class="multiselect-select-all js-action-link"><?php _e( 'Select All', 'wp-migrate-db' ); ?></a>
-						<span class="select-deselect-divider">/</span>
-						<a href="#" class="multiselect-deselect-all js-action-link"><?php _e( 'Deselect All', 'wp-migrate-db' ); ?></a>
-						<span class="select-deselect-divider">/</span>
-						<a href="#" class="multiselect-invert-selection js-action-link"><?php _e( 'Invert Selection', 'wp-migrate-db' ); ?></a>
-					</div>
-				</div>
-			</div>
+			<?php $this->template_part( array( 'select_tables', 'exclude_post_types' ), $loaded_profile ); ?>
 
 			<div class="option-section">
 				<div class="header-expand-collapse clearfix">
@@ -347,62 +260,13 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 							Exclude <a href="https://codex.wordpress.org/Transients_API" target="_blank">transients</a> (temporary cached data)
 							</label>
 						</li>
+						<?php $this->template_part( array( 'exclude_post_revisions' ), $loaded_profile ); ?>
 					</ul>
 
 				</div>
 			</div>
 
-			<div class="option-section backup-options" style="display: block;">
-				<label for="create-backup" class="backup-checkbox checkbox-label">
-					<input type="checkbox" id="create-backup" value="1" autocomplete="off" name="create_backup"<?php $this->maybe_checked( $loaded_profile['create_backup'] ); ?> />
-					<?php _e( 'Backup the <span class="directory-scope">local</span> database before replacing it', 'wp-migrate-db' ); ?><br />
-					<span class="option-description backup-description"><?php _e( 'An SQL file will be saved to', 'wp-migrate-db' ); ?> <span class="uploads-dir"><?php echo $this->get_short_uploads_dir(); ?></span></span>
-				</label>
-
-				<div class="indent-wrap expandable-content">
-					<ul>
-						<li>
-							<label for="backup-only-with-prefix">
-							<input type="radio" id="backup-only-with-prefix" value="backup_only_with_prefix" name="backup_option"<?php echo ( $loaded_profile['backup_option'] == 'backup_only_with_prefix' ? ' checked="checked"' : '' ); ?> >
-							<?php _e( 'Backup all tables with prefix', 'wp-migrate-db' ); ?> "<span class="table-prefix"><?php echo $wpdb->prefix; ?></span>"
-							</label>
-						</li>
-						<li>
-							<label for="backup-selected">
-							<input type="radio" id="backup-selected" value="backup_selected" name="backup_option"<?php echo ( $loaded_profile['backup_option'] == 'backup_selected' ? ' checked="checked"' : '' ); ?> >
-							<?php _e( 'Backup only tables selected for migration', 'wp-migrate-db' ); ?>
-							</label>
-						</li>
-						<li>
-							<label for="backup-manual-select">
-							<input type="radio" id="backup-manual-select" value="backup_manual_select" name="backup_option"<?php echo ( $loaded_profile['backup_option'] == 'backup_manual_select' ? ' checked="checked"' : '' ); ?> >
-							<?php _e( 'Backup only selected tables below', 'wp-migrate-db' ); ?>
-							</label>
-						</li>
-					</ul>
-
-					<div class="backup-tables-wrap select-wrap">
-						<select multiple="multiple" name="select_backup[]" id="select-backup" class="multiselect">
-						<?php foreach( $tables as $table => $size ) :
-							$size = (int) $size * 1024;
-							if( ! empty( $loaded_profile['select_backup'] ) && in_array( $table, $loaded_profile['select_backup'] ) ){
-								printf( '<option value="%1$s" selected="selected">%1$s (%2$s)</option>', $table, size_format( $size ) );
-							}
-							else{
-								printf( '<option value="%1$s">%1$s (%2$s)</option>', $table, size_format( $size ) );
-							}
-						endforeach; ?>
-						</select>
-						<br />
-						<a href="#" class="multiselect-select-all js-action-link"><?php _e( 'Select All', 'wp-migrate-db' ); ?></a>
-						<span class="select-deselect-divider">/</span>
-						<a href="#" class="multiselect-deselect-all js-action-link"><?php _e( 'Deselect All', 'wp-migrate-db' ); ?></a>
-						<span class="select-deselect-divider">/</span>
-						<a href="#" class="multiselect-invert-selection js-action-link"><?php _e( 'Invert Selection', 'wp-migrate-db' ); ?></a>
-					</div>
-				</div>
-				<p class="backup-option-disabled inline-message error-notice notification-message" style="display: none;"><?php printf( __( 'The backup option has been disabled as your <span class="directory-scope">local</span> uploads directory is currently not writeable. The following directory should have 755 permissions: <span class="upload-directory-location">%s</span></p>', 'wp-migrate-db' ), $this->get_upload_info( 'path' ) ); ?>
-			</div>
+			<?php $this->template_part( array( 'backup' ), $loaded_profile ); ?>
 
 			<?php do_action( 'wpmdb_after_advanced_options' ); ?>
 

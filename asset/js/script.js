@@ -369,7 +369,7 @@ var execute_next_step;
 		function establish_remote_connection_from_saved_profile(){
 			var action = $('input[name=action]:checked').val();
 			var connection_info = $.trim( $('.pull-push-connection-info').val() ).split("\n");
-			if( typeof wpmdb_default_profile == 'undefined' || wpmdb_default_profile == true || action == 'savefile' || doing_ajax ){
+			if( typeof wpmdb_default_profile == 'undefined' || wpmdb_default_profile == true || action == 'savefile' || doing_ajax || ! wpmdb_is_pro ){
 				return;
 			}
 
@@ -1478,7 +1478,7 @@ var execute_next_step;
 					$('.table-prefix').html(connection_data.prefix);
 					$('.uploads-dir').html(wpmdb_this_uploads_dir);
 					if( profile_name_edited == false ){
-						var profile_name = get_domain_name( connection_info[0] );
+						var profile_name = get_domain_name( connection_data.url );
 						$('.create-new-profile').val(profile_name);
 					}
 					if( show_prefix_notice == true ) {
@@ -1514,7 +1514,7 @@ var execute_next_step;
 					$('.table-prefix').html(wpmdb_this_prefix);
 					$('.uploads-dir').html(connection_data.uploads_dir);
 					if( profile_name_edited == false ){
-						var profile_name = get_domain_name( connection_info[0] );
+						var profile_name = get_domain_name( connection_data.url );
 						$('.create-new-profile').val(profile_name);
 					}
 					if( show_prefix_notice == true ) {
@@ -2133,7 +2133,7 @@ var execute_next_step;
 						return;
 					}
 
-					var profile_name = get_domain_name( connection_info[0] );
+					var profile_name = get_domain_name( data.url );
 					$('.create-new-profile').val(profile_name);
 
 					$('.pull-push-connection-info').addClass('temp-disabled');

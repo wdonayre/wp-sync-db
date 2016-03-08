@@ -1,8 +1,9 @@
 <?php
-class WPMDBPro_Addon extends WPMDBPro_Base {
+class WPMDBPro_Addon extends WPMDB_Base {
 	protected $version_required;
 
 	function __construct( $plugin_file_path ) {
+		$this->is_addon = true;
 		parent::__construct( $plugin_file_path );
 	}
 
@@ -54,7 +55,7 @@ class WPMDBPro_Addon extends WPMDBPro_Base {
 			$addon_name = $this->get_plugin_name();
 			$required = $this->version_required;
 			$installed = $GLOBALS['wpmdb_meta']['wp-migrate-db-pro']['version'];
-			$wpmdb_basename = sprintf( '%s/%s.php', $GLOBALS['wpmdb_meta']['wp-migrate-db-pro']['folder'], 'wp-migrate-db-pro' );
+			$wpmdb_basename = sprintf( '%s/%s.php', $GLOBALS['wpmdb_meta']['wp-migrate-db-pro']['folder'], 'wp-migrate-db' );
 			$update = wp_nonce_url( network_admin_url( 'update.php?action=upgrade-plugin&plugin=' . urlencode( $wpmdb_basename ) ), 'upgrade-plugin_' . $wpmdb_basename );
 			printf( __( 'The version of %1$s you have installed, requires version %2$s of WP Migrate DB Pro. You currently have %3$s installed. <strong><a href="%4$s">Update Now</a></strong>', 'wp-migrate-db' ), $addon_name, $required, $installed, $update ); ?>
 		</div>	<?php

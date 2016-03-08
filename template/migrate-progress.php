@@ -20,4 +20,6 @@
 		<span class="cancel button"><?php _e( 'Cancel', 'wp-migrate-db' ); ?></span>
 	</div>
 
+	<?php $this->template_part( array( 'progress_upgrade' ) ); ?>
+
 </div> <!-- end .progress-content -->
