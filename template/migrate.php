@@ -57,11 +57,11 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 
 	<form method="post" id="migrate-form" action="#migrate" enctype="multipart/form-data">
 
-		<?php if ( count( $this->settings['profiles'] ) > 0 ){ ?>
+		<?php if ( count( $this->settings['profiles'] ) > 0 ) : ?>
 			<a href="<?php echo $this->plugin_base; ?>" class="return-to-profile-selection clearfix">
 				&larr; <?php _e( 'Back to select a saved profile', 'wp-migrate-db-pro' ); ?>
 			</a>
-		<?php } ?>
+		<?php endif; ?>
 
 		<div class="option-section">
 
@@ -464,11 +464,11 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 
 		</div>
 
-		<?php if ( count( $this->settings['profiles'] ) > 0 ){ ?>
+		<?php if ( count( $this->settings['profiles'] ) > 0 ) : ?>
 			<a href="<?php echo $this->plugin_base; ?>" class="return-to-profile-selection clearfix bottom">
 				&larr; <?php _e( 'Back to select a saved profile', 'wp-migrate-db-pro' ); ?>
 			</a>
-		<?php } ?>
+		<?php endif; ?>
 
 	</form>
 	<?php $this->template( 'migrate-progress' ); ?>

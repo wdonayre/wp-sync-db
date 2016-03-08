@@ -81,9 +81,9 @@ class WPMDBPro extends WPMDBPro_Base {
 		add_action( 'wp_ajax_wpmdb_activate_licence', array( $this, 'ajax_activate_licence' ) );
 		add_action( 'wp_ajax_wpmdb_check_licence', array( $this, 'ajax_check_licence' ) );
 		add_action( 'wp_ajax_wpmdb_fire_migration_complete', array( $this, 'fire_migration_complete' ) );
-		add_action( 'wp_ajax_wpmdb_update_max_request_size', array( $this, 'ajax_update_max_request_size' ) );
 		add_action( 'wp_ajax_wpmdb_plugin_compatibility', array( $this, 'ajax_plugin_compatibility' ) );
 		add_action( 'wp_ajax_wpmdb_blacklist_plugins', array( $this, 'ajax_blacklist_plugins' ) );
+		add_action( 'wp_ajax_wpmdb_update_max_request_size', array( $this, 'ajax_update_max_request_size' ) );
 		add_action( 'wp_ajax_wpmdb_cancel_migration', array( $this, 'ajax_cancel_migration' ) );
 
 		// external AJAX handlers
@@ -189,11 +189,6 @@ class WPMDBPro extends WPMDBPro_Base {
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 			$this->plugin_base = 'tools.php?page=wp-migrate-db-pro';
 		}
-
-		// testing only - if uncommented, will always check for plugin updates
-		//delete_site_transient( 'update_plugins' );
-		//delete_site_transient( 'wpmdb_upgrade_data' );
-		//delete_site_transient( 'wpmdb_licence_response' );
 	}
 
 	function ajax_blacklist_plugins() {
@@ -467,7 +462,8 @@ class WPMDBPro extends WPMDBPro_Base {
 		echo "\r\n";
 
 		echo 'WordPress: ';
-		if ( is_multisite() ) echo 'WPMU'; else echo 'WP'; echo bloginfo('version');
+		echo ( is_multisite() ) ? 'WPMU' : 'MU';
+		echo bloginfo( 'version' );
 		echo "\r\n";
 
 		echo 'Web Server: ';
@@ -509,7 +505,7 @@ class WPMDBPro extends WPMDBPro_Base {
 		}
 
 		echo 'Debug Mode: ';
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { echo 'Yes'; } else { echo 'No'; }
+		echo ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ? 'Yes' : 'No';
 		echo "\r\n";
 
 		echo 'WP Max Upload Size: ';
@@ -1381,10 +1377,10 @@ class WPMDBPro extends WPMDBPro_Base {
 
 	function get_table_row_count() {
 		global $wpdb;
-		$results = $wpdb->get_results( $wpdb->prepare(
-			'SELECT table_name, TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = %s', DB_NAME
-			), ARRAY_A
-		);
+
+		$sql = $wpdb->prepare( "SELECT table_name, TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = %s", DB_NAME );
+		$results = $wpdb->get_results( $sql, ARRAY_A );
+
 		$return = array();
 
 		foreach ( $results as $results ) {
@@ -1399,14 +1395,15 @@ class WPMDBPro extends WPMDBPro_Base {
 
 		$prefix = ( $scope == 'temp' ? $this->temp_prefix : $wpdb->prefix );
 
-		$results = $wpdb->get_results( $wpdb->prepare(
-			'SELECT TABLE_NAME AS "table",
-			ROUND ( ( data_length + index_length ) / 1024, 0 ) AS "size"
+		$sql = $wpdb->prepare(
+			"SELECT TABLE_NAME AS 'table',
+			ROUND ( ( data_length + index_length ) / 1024, 0 ) AS 'size'
 			FROM information_schema.TABLES
-			WHERE information_schema.TABLES.table_schema="%s"
-			AND information_schema.TABLES.table_type="%s"', DB_NAME, "BASE TABLE"
-			), ARRAY_A
+			WHERE information_schema.TABLES.table_schema='%s'
+			AND information_schema.TABLES.table_type='%s'", DB_NAME, 'BASE TABLE'
 		);
+
+		$results = $wpdb->get_results( $sql, ARRAY_A );
 
 		$return = array();
 
@@ -1594,8 +1591,7 @@ class WPMDBPro extends WPMDBPro_Base {
 				$crlf = $nl_win;
 			} elseif ( strpos( $create_query, $nl_mac ) !== false ) {
 				$crlf = $nl_mac;
-			}
-			elseif( strpos( $create_query, $nl_nix ) !== false ) {
+			} else {
 				$crlf = $nl_nix;
 			}
 
