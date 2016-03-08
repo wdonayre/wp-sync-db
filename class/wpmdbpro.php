@@ -213,7 +213,7 @@ class WPMDBPro extends WPMDBPro_Base {
 			}
 
 			if ( ! copy( $source, $dest ) ) {
-				_e( sprintf( 'Could not copy the compatibility plugin from %1$s to %2$s', $source, $destination ), 'wp-migrate-db-pro' );
+				_e( sprintf( 'Could not copy the compatibility plugin from %1$s to %2$s', $source, $dest ), 'wp-migrate-db-pro' );
 				exit;
 			}
 		} else { // uninstall MU plugin
