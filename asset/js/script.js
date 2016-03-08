@@ -70,7 +70,7 @@ var execute_next_step;
 		return typeof n === 'number' && n % 1 == 0;
 	}
 
-	function setup_counter() { 
+	function setup_counter() {
 		timer_count = 0,
 		counter_display = $('.timer'),
 		label = wpmdb_i10n.time_elapsed + ' ';
@@ -373,11 +373,11 @@ var execute_next_step;
 
 			doing_ajax = true;
 			disable_export_type_controls();
-			
+
 			$('.connection-status').html( wpmdb_i10n.establishing_remote_connection );
 			$('.connection-status').removeClass( 'notification-message error-notice migration-error' );
 			$('.connection-status').append( '<img src="' + spinner_url + '" alt="" class="ajax-spinner general-spinner" />' );
-			
+
 			var intent = $('input[name=action]:checked').val();
 
 			$.ajax({
@@ -417,11 +417,11 @@ var execute_next_step;
 
 						return;
 					}
-					
+
 					maybe_show_ssl_warning( connection_info[0], connection_info[1], data.scheme );
 					maybe_show_version_warning( data.plugin_version, connection_info[0] );
 					maybe_show_prefix_notice( data.prefix );
-					
+
 					$('.pull-push-connection-info').addClass('temp-disabled');
 					$('.pull-push-connection-info').attr('readonly','readonly');
 					$('.connect-button').hide();
@@ -529,17 +529,17 @@ var execute_next_step;
 					}
 					else {
 						$('#select-backup').remove();
-						$('.backup-tables-wrap').prepend(push_select_backup);					
+						$('.backup-tables-wrap').prepend(push_select_backup);
 					}
 
 					$.wpmdb.do_action( 'verify_connection_to_remote_site', connection_data );
-					
+
 				}
 
 			});
 
 		}
-		
+
 		// add to <a> tags which act as JS event buttons, will not jump page to top and will deselect the button
 		$('.js-action-link').click(function(e){
 			e.preventDefault();
@@ -653,21 +653,21 @@ var execute_next_step;
 				}
 			});
 		}
-		
+
 		// select all tables
 		$('.multiselect-select-all').click(function(){
 			var multiselect = $(this).parents('.select-wrap').children('.multiselect');
 			$(multiselect).focus();
 			$('option', multiselect).attr('selected',1);
 		});
-		
+
 		// deselect all tables
 		$('.multiselect-deselect-all').click(function(){
 			var multiselect = $(this).parents('.select-wrap').children('.multiselect');
 			$(multiselect).focus();
 			$('option', multiselect).removeAttr('selected');
 		});
-		
+
 		// invert table selection
 		$('.multiselect-invert-selection').click(function(){
 			var multiselect = $(this).parents('.select-wrap').children('.multiselect');
@@ -676,7 +676,7 @@ var execute_next_step;
 				$(this).attr('selected', ! $(this).attr('selected'));
 			});
 		});
-		
+
 		// on option select hide all "advanced" option divs and show the correct div for the option selected
 		$('.option-group input[type=radio]').change(function() {
 			group = $(this).closest('.option-group');
@@ -684,7 +684,7 @@ var execute_next_step;
 			parent = $(this).closest('li');
 			$('ul', parent).show();
 		});
-		
+
 		// on page load, expand hidden divs for selected options (browser form cache)
 		$('.option-group').each(function(){
 			$('.option-group input[type=radio]').each(function(){
@@ -694,7 +694,7 @@ var execute_next_step;
 				}
 			});
 		});
-		
+
 		// expand and collapse content on click
 		$('.header-expand-collapse').click(function(){
 			if( $('.expand-collapse-arrow', this).hasClass('collapsed') ){
@@ -715,7 +715,7 @@ var execute_next_step;
 				$(this).parent().next().hide();
 			}
 		});
-		
+
 		// special expand and collapse content on click for save migration profile
 		$('#save-migration-profile').change(function() {
 			if( $(this).is(':checked') ){
@@ -727,7 +727,7 @@ var execute_next_step;
 				$('.migrate-db .button-primary').val(wpmdb_i10n.migrate_db);
 			}
 		});
-		
+
 		if( $('#save-migration-profile').is(':checked') ){
 			$('.save-settings-button').show();
 			$('.migrate-db .button-primary').val(wpmdb_i10n.migrate_db_save);
@@ -786,7 +786,7 @@ var execute_next_step;
 					$('.create-new-profile').focus();
 					return;
 				}
-				
+
 				var create_new_profile = false;
 
 				if( $('#create_new').is(':checked') ){
@@ -903,7 +903,7 @@ var execute_next_step;
 					}
 					else if( backup_option == 'backup_selected' ) {
 						selected_tables = $('#select-tables').val();
-						tables_to_migrate = get_intersect( selected_tables, wpmdb_this_tables );				
+						tables_to_migrate = get_intersect( selected_tables, wpmdb_this_tables );
 					}
 					else if( backup_option == 'backup_manual_select' ) {
 						tables_to_migrate = $('#select-backup').val();
@@ -932,7 +932,7 @@ var execute_next_step;
 						tables_to_migrate = connection_data.prefixed_tables;
 						table_rows = connection_data.table_rows;
 					}
-				}				
+				}
 			}
 
 			function decide_tables_to_display_rows( tables_to_migrate, table_rows ){
@@ -948,7 +948,7 @@ var execute_next_step;
 					var percent_rounded = Math.round(percent*1000)/1000;
 					$('.progress-tables').append('<div class="progress-chunk ' + value + '_chunk" style="width: ' + percent_rounded + '%;" title="' + value + '"><span>' + value + '</span></div>');
 					$('.progress-tables-hover-boxes').append('<div class="progress-chunk-hover" data-table="' + value + '" style="width: ' + percent_rounded + '%;"></div>');
-					var label = $('.progress-tables .progress-chunk:last span');				
+					var label = $('.progress-tables .progress-chunk:last span');
 					last_element = value;
 				});
 
@@ -1045,7 +1045,7 @@ var execute_next_step;
 					var temp_progress = 0;
 					var last_progress = 0;
 					var overall_table_progress = 0;
-							
+
 					migrate_table_recursive = function( current_row, primary_keys ){
 
 						if( i >= tables_to_migrate.length ){
@@ -1136,7 +1136,7 @@ var execute_next_step;
 							request_data.path_current_site = connection_data.path_current_site;
 							request_data.domain_current_site = connection_data.domain;
 						}
-						
+
 						doing_ajax = true;
 
 						$.ajax({
@@ -1209,7 +1209,7 @@ var execute_next_step;
 								execute_next_step();
 							}
 						});
-					
+
 					}
 
 					next_step_in_migration = { fn: migrate_table_recursive, args: [ '-1', '' ] };
@@ -1218,7 +1218,7 @@ var execute_next_step;
 				}
 
 			}); // end ajax
-			
+
 		});
 
 		migration_complete_events = function() {
@@ -1443,7 +1443,7 @@ var execute_next_step;
 		// move around textarea depending on whether or not the push/pull options are selected
 		connection_info_box = $('.connection-info-wrapper');
 		move_connection_info_box();
-		
+
 		$('.migrate-selection.option-group input[type=radio]').change(function() {
 			move_connection_info_box();
 			if( connection_established ){
@@ -1553,7 +1553,7 @@ var execute_next_step;
 			}
 			$.wpmdb.do_action( 'move_connection_info_box' );
 		}
-			
+
 		function change_replace_values(){
 			if( $('#push').is(':checked') || $('#savefile').is(':checked') ){
 				if( last_replace_switch == '' || last_replace_switch == 'pull' ){
@@ -1589,13 +1589,13 @@ var execute_next_step;
 			}
 
 		}
-		
+
 		// hide second section if pull or push is selected with no connection established
 		if( ( $('#pull').is(':checked') || $('#push').is(':checked') ) && ! connection_established  ){
 			$('.step-two').hide();
 			$('.connection-status').show();
 		}
-		
+
 		// show / hide GUID helper description
 		$('.general-helper').click(function(e){
 			var icon = $(this),
@@ -1620,7 +1620,7 @@ var execute_next_step;
 			bubble.toggle();
 			e.stopPropagation();
 		});
-		
+
 		$('body').click(function(){
 			$('.helper-message').hide();
 		});
@@ -1628,7 +1628,7 @@ var execute_next_step;
 		$('.helper-message').click(function(e){
 			e.stopPropagation();
 		});
-		
+
 		// migrate / settings tabs
 		$('.nav-tab').click(function(){
 			$('.nav-tab').removeClass('nav-tab-active');
@@ -1658,25 +1658,25 @@ var execute_next_step;
 			}
 
 		});
-		
-		// repeatable fields		
+
+		// repeatable fields
 		$('body').delegate('.add-row', 'click', function() {
 			$(this).parents('tr').before( $('.original-repeatable-field').clone().removeClass('original-repeatable-field') );
 		});
-		
-		// repeatable fields		
+
+		// repeatable fields
 		$('body').delegate('.replace-remove-row', 'click', function() {
 			$(this).parents('tr').remove();
 			if( $('.replace-row').length < 2 ){
 				$('.no-replaces-message').show();
 			}
 		});
-		
+
 		$('.add-replace').click(function(){
 			$('.replace-fields').prepend( $('.original-repeatable-field').clone().removeClass('original-repeatable-field') );
 			$('.no-replaces-message').hide();
 		});
-		
+
 		$
 
 		$('body').delegate('#find-and-replace-sort tbody tr.replace-row', 'hover', function(event) {
@@ -1691,16 +1691,16 @@ var execute_next_step;
 		$('#find-and-replace-sort tbody').sortable({
 				items: '> tr:not(.pin)',
 				handle: 'td:first',
-			    start: function () {
-			      $('.sort-handle').css('cursor', '-webkit-grabbing');
-			      $('.sort-handle').css('cursor', '-moz-grabbing');
-			    },
-			    stop: function () {
-			      $('.sort-handle').css('cursor', '-webkit-grab');
-			      $('.sort-handle').css('cursor', '-moz-grab');
+				start: function () {
+				  $('.sort-handle').css('cursor', '-webkit-grabbing');
+				  $('.sort-handle').css('cursor', '-moz-grabbing');
+				},
+				stop: function () {
+				  $('.sort-handle').css('cursor', '-webkit-grab');
+				  $('.sort-handle').css('cursor', '-moz-grab');
 				}
 		});
-		
+
 		// delete saved profiles
 		$('body').delegate('.save-migration-profile-wrap li', 'hover', function(event) {
 			if( event.type === 'mouseenter' ){
@@ -1710,11 +1710,11 @@ var execute_next_step;
 				$('.delete-profile', this).hide();
 			}
 		});
-		
+
 		function validate_url( url ){
 			return /^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
 		}
-		
+
 		// check for hash in url (settings || migrate) switch tabs accordingly
 		if(window.location.hash) {
 			var hash = window.location.hash.substring(1);
@@ -1987,7 +1987,7 @@ var execute_next_step;
 			setTimeout(function () {
 				connection_box_changed();
 			}, 0);
-			
+
 		});
 
 		$('body').delegate('.try-again','click',function(){
@@ -2005,14 +2005,14 @@ var execute_next_step;
 		$('.create-new-profile').change(function(){
 			profile_name_edited = true;
 		});
-		
+
 		$('body').delegate('.temporarily-disable-ssl','click',function(){
 			if(window.location.hash) {
 				var hash = window.location.hash.substring(1);
 			}
 			$(this).attr('href', $(this).attr('href') + '&hash=' + hash );
 		});
-		
+
 		// fired when the connection info box changes (e.g. gets pasted into)
 		function connection_box_changed(data){
 			var $this = $('.pull-push-connection-info');
@@ -2022,41 +2022,41 @@ var execute_next_step;
 			}
 
 			var data = $('.pull-push-connection-info').val();
-		
+
 			var connection_info = $.trim(data).split("\n");
 			var error = false;
 			var error_message = '';
-			
+
 			if( connection_info == '' ){
 				error = true;
 				error_message = wpmdb_i10n.connection_info_missing;
 			}
-			
+
 			if( connection_info.length != 2 && ! error ){
 				error = true;
 				error_message = wpmdb_i10n.connection_info_incorrect;
 			}
-			
+
 			if( ! error && ! validate_url( connection_info[0] ) ){
 				error = true;
-				error_message = wpmdb_i10n.connection_info_url_invalid;	
+				error_message = wpmdb_i10n.connection_info_url_invalid;
 			}
-			
+
 			if( ! error && connection_info[1].length != 32 ){
 				error = true;
-				error_message = wpmdb_i10n.connection_info_key_invalid;	
+				error_message = wpmdb_i10n.connection_info_key_invalid;
 			}
-			
+
 			if( ! error && connection_info[0] == wpmdb_connection_info[0] ){
 				error = true;
 				error_message = wpmdb_i10n.connection_info_local_url;
 			}
-			
+
 			if( ! error && connection_info[1] == wpmdb_connection_info[1] ){
 				error = true;
 				error_message = wpmdb_i10n.connection_info_local_key;
 			}
-			
+
 			if( error ){
 				$('.connection-status').html( error_message );
 				$('.connection-status').addClass( 'notification-message error-notice migration-error' );
@@ -2080,7 +2080,7 @@ var execute_next_step;
 				$('.pull-push-connection-info').val(new_connection_info_contents);
 				$('.basic-access-auth-wrapper').hide();
 			}
-			
+
 			$('.step-two').hide();
 			$('.ssl-notice').hide();
 			$('.prefix-notice').hide();
@@ -2089,7 +2089,7 @@ var execute_next_step;
 			$('.connection-status').html( wpmdb_i10n.establishing_remote_connection );
 			$('.connection-status').removeClass( 'notification-message error-notice migration-error' );
 			$('.connection-status').append( '<img src="' + spinner_url + '" alt="" class="ajax-spinner general-spinner" />' );
-			
+
 			var intent = $('input[name=action]:checked').val();
 
 			profile_name_edited = false;
@@ -2132,7 +2132,7 @@ var execute_next_step;
 
 					var profile_name = get_domain_name( connection_info[0] );
 					$('.create-new-profile').val(profile_name);
-											
+
 					$('.pull-push-connection-info').addClass('temp-disabled');
 					$('.pull-push-connection-info').attr('readonly','readonly');
 					$('.connect-button').hide();
@@ -2206,9 +2206,9 @@ var execute_next_step;
 					next_step_in_migration = { fn: $.wpmdb.do_action, args: [ 'verify_connection_to_remote_site', connection_data ] };
 					execute_next_step();
 				}
-				
+
 			});
-			
+
 		}
 
 		$('body').delegate('.pause-resume','click',function(){
@@ -2337,7 +2337,7 @@ var execute_next_step;
 				next_step_in_migration.fn.apply( null, next_step_in_migration.args );
 			}
 		}
-		
+
 	});
 
 })(jQuery);

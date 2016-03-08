@@ -57,10 +57,12 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 
 	<form method="post" id="migrate-form" action="#migrate" enctype="multipart/form-data">
 
-		<?php if( count( $this->settings['profiles'] ) > 0 ){ ?>
-			<a href="<?php echo $this->plugin_base; ?>" class="return-to-profile-selection clearfix">&larr; <?php _e( 'Back to select a saved profile', 'wp-migrate-db-pro' ); ?></a>
+		<?php if ( count( $this->settings['profiles'] ) > 0 ){ ?>
+			<a href="<?php echo $this->plugin_base; ?>" class="return-to-profile-selection clearfix">
+				&larr; <?php _e( 'Back to select a saved profile', 'wp-migrate-db-pro' ); ?>
+			</a>
 		<?php } ?>
-	
+
 		<div class="option-section">
 
 			<ul class="option-group migrate-selection">
@@ -105,7 +107,7 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 					</ul>
 				</li>
 			</ul>
-			
+
 			<div class="connection-info-wrapper clearfix">
 				<textarea class="pull-push-connection-info" name="connection_info" placeholder="<?php _e( 'Connection Info - Site URL &amp; Secret Key', 'wp-migrate-db-pro' ); ?>"><?php echo ( isset( $loaded_profile['connection_info'] ) ? $loaded_profile['connection_info'] : '' ); ?></textarea>
 				<br />
@@ -123,7 +125,7 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 			<?php if ( !$this->is_valid_licence() ) {
 				echo '<div class="notification-message warning-notice inline-message invalid-licence">' . $this->get_licence_status_message() . '</div>';
 			} ?>
-		
+
 		</div>
 
 		<p class="connection-status"><?php _e( 'Please enter the connection information above to continue.', 'wp-migrate-db-pro' ); ?></p>
@@ -134,12 +136,12 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 
 		<div class="notification-message error-notice directory-permission-notice inline-message" style="display: none;">
 			<strong><?php _e( 'Cannot Access Uploads Directory', 'wp-migrate-db-pro' ); ?></strong> &mdash;
-			<?php 
+			<?php
 				_e( 'We require write permissions to the standard WordPress uploads directory. Without this permission exports are unavailable. Please grant 755 permissions on the following directory:', 'wp-migrate-db-pro' );
-				echo $this->get_upload_info( 'path' ); 
+				echo $this->get_upload_info( 'path' );
 			?>
 		</div>
-		
+
 		<div class="step-two">
 
 			<div class="option-section">
@@ -147,9 +149,9 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 					<div class="option-heading find-heading"><?php _e( 'Find', 'wp-migrate-db-pro' ); ?></div>
 					<div class="option-heading replace-heading"><?php _e( 'Replace', 'wp-migrate-db-pro' ); ?></div>
 				</div>
-				
+
 				<p class="no-replaces-message"><?php _e( 'Doesn\'t look we have any replaces yet, <a href="#" class="js-action-link add-replace">add one?</a>', 'wp-migrate-db-pro' ); ?></p>
-				
+
 				<table id="find-and-replace-sort" class="clearfix replace-fields">
 					<tbody>
 					<tr class="replace-row original-repeatable-field">
@@ -221,9 +223,9 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 						++$i;
 						endforeach; ?>
 					<?php endif; ?>
-							<tr class="pin">
-								<td colspan="4"><a class="button add-row">Add Row</a></td>
-							</tr>
+						<tr class="pin">
+							<td colspan="4"><a class="button add-row">Add Row</a></td>
+						</tr>
 					</tbody>
 				</table>
 
@@ -305,15 +307,15 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="option-section">
 				<div class="header-expand-collapse clearfix">
 					<div class="expand-collapse-arrow collapsed">&#x25BC;</div>
 					<div class="option-heading tables-header"><?php _e( 'Advanced Options', 'wp-migrate-db-pro' ); ?></div>
 				</div>
-				
+
 				<div class="indent-wrap expandable-content">
-					
+
 					<ul>
 						<li>
 							<label for="replace-guids">
@@ -356,7 +358,7 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 					<?php _e( 'Backup the <span class="directory-scope">local</span> database before replacing it', 'wp-migrate-db-pro' ); ?><br />
 					<span class="option-description backup-description"><?php _e( 'An SQL file will be saved to', 'wp-migrate-db-pro' ); ?> <span class="uploads-dir"><?php echo $this->get_short_uploads_dir(); ?></span></span>
 				</label>
-				
+
 				<div class="indent-wrap expandable-content">
 					<ul>
 						<li>
@@ -403,13 +405,13 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 			</div>
 
 			<?php do_action( 'wpmdb_after_advanced_options' ); ?>
-			
+
 			<div class="option-section save-migration-profile-wrap">
 				<label for="save-migration-profile" class="save-migration-profile checkbox-label">
 				<input id="save-migration-profile" type="checkbox" value="1" name="save_migration_profile"<?php echo ( ! $is_default_profile ? ' checked="checked"' : '' ); ?> />
 				<?php _e( 'Save Migration Profile', 'wp-migrate-db-pro' ); ?><span class="option-description"><?php _e( 'Save the above settings for the next time you do a similiar migration', 'wp-migrate-db-pro' ); ?></span>
 				</label>
-				
+
 				<div class="indent-wrap expandable-content">
 					<ul class="option-group">
 						<?php
@@ -459,17 +461,16 @@ $loaded_profile = wp_parse_args( $loaded_profile, $this->checkbox_options );
 				<input class="button-primary migrate-db-button" type="submit" value="Migrate DB" name="Submit" autocomplete="off" />
 				<input class="button save-settings-button" type="submit" value="Save Profile" name="submit_save_profile" autocomplete="off" />
 			</p>
-			
+
 		</div>
 
-		<?php
-		if( count( $this->settings['profiles'] ) > 0 ){ ?>
-			<a href="<?php echo $this->plugin_base; ?>" class="return-to-profile-selection clearfix bottom">&larr; <?php _e( 'Back to select a saved profile', 'wp-migrate-db-pro' ); ?></a>
+		<?php if ( count( $this->settings['profiles'] ) > 0 ){ ?>
+			<a href="<?php echo $this->plugin_base; ?>" class="return-to-profile-selection clearfix bottom">
+				&larr; <?php _e( 'Back to select a saved profile', 'wp-migrate-db-pro' ); ?>
+			</a>
 		<?php } ?>
 
 	</form>
-	<?php
-	$this->template( 'migrate-progress' );
-	?>
+	<?php $this->template( 'migrate-progress' ); ?>
 
 </div> <!-- end .migrate-tab -->

@@ -704,7 +704,7 @@ class WPMDBPro_Base {
 		if ( !isset( $GLOBALS['wpmdb_meta'][$this->plugin_slug]['version'] ) ) {
 			?>
 			<div style="display: block;" class="updated warning inline-message">
-				<strong>Update Available</strong> &mdash; 
+				<strong>Update Available</strong> &mdash;
 				A new version of <?php echo $this->plugin_title; ?> is now available. <a href="<?php echo $update_url; ?>">Update Now</a>
 			</div>
 			<?php

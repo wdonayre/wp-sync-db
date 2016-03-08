@@ -53,5 +53,4 @@ function wp_migrate_db_pro_init() {
 
 	load_plugin_textdomain( 'wp-migrate-db-pro', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
-
 add_action( 'init', 'wp_migrate_db_pro_init' );
