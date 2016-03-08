@@ -1109,14 +1109,12 @@ class WPMDBPro extends WPMDBPro_Base {
 				$return['error'] = 1;
 				if ( $_POST['intent'] == 'pull' ) {
 					$intent = __( 'pull', 'wp-migrate-db' );
-				}
-				else {
+				} else {
 					$intent = __( 'push', 'wp-migrate-db' );
 				}
-				$return['message'] = sprintf( __( 'The connection succeeded but the remote site is configured to reject %s connections. You can change this in the "settings" tab on the remote site. (#110)', 'wp-migrate-db'), $intent );
+				$return['message'] = sprintf( __( 'The connection succeeded but the remote site is configured to reject %s connections. You can change this in the "settings" tab on the remote site. (#110)', 'wp-migrate-db' ), $intent );
 			}
-		}
-		else {
+		} else {
 			$return['error'] = 1;
 			$error_msg = $this->invalid_content_verification_error . ' (#111)';
 			$this->log_error( $error_msg, $filtered_post );
@@ -1284,10 +1282,10 @@ class WPMDBPro extends WPMDBPro_Base {
 
 			if ( $_POST['intent'] == 'pull' ) {
 				$intent = __( 'pull', 'wp-migrate-db' );
-			}
-			else {
+			} else {
 				$intent = __( 'push', 'wp-migrate-db' );
 			}
+
 			$return['message'] = sprintf( __( 'The connection succeeded but the remote site is configured to reject %s connections. You can change this in the "settings" tab on the remote site. (#122) <a href="#" class="try-again js-action-link">Try again?</a>', 'wp-migrate-db' ), $intent );
 			$result = $this->end_ajax( serialize( $return ) );
 			return $result;
@@ -2187,7 +2185,6 @@ class WPMDBPro extends WPMDBPro_Base {
 		return $data;
 	}
 
-
 	function db_backup_header() {
 		$charset = ( defined( 'DB_CHARSET' ) ? DB_CHARSET : 'utf8' );
 		$this->stow( "# " . __( 'WordPress MySQL database migration', 'wp-migrate-db' ) . "\n", false );
@@ -2614,7 +2611,9 @@ class WPMDBPro extends WPMDBPro_Base {
 				} else {
 					$addon_file = sprintf( '%s%s/%s.php', $this->plugins_dir(), $plugin_folder, $plugin_slug );
 					// No addon plugin file or version.php file, bail and move on to the next addon
-					if ( ! file_exists( $addon_file ) ) continue;
+					if ( ! file_exists( $addon_file ) ) {
+						continue;
+					}
 					/*
 					 * The addon's plugin file exists but a version.php file doesn't
 					 * We're now assuming that the addon is outdated and provide an arbitrary out-of-date version number
@@ -2651,8 +2650,8 @@ class WPMDBPro extends WPMDBPro_Base {
 		wp_enqueue_script( 'wp-migrate-db-pro-plugin-update-script', $src, array( 'jquery' ), false, true );
 
 		wp_localize_script( 'wp-migrate-db-pro-plugin-update-script', 'wpmdb_l10n', array(
-			'check_license_again'  	=> __( "Check my license again", 'wp-migrate-db' ),
-			'license_check_problem'	=> __( "A problem occurred when trying to check the license, please try again.", 'wp-migrate-db' ),
+			'check_license_again'   => __( "Check my license again", 'wp-migrate-db' ),
+			'license_check_problem' => __( "A problem occurred when trying to check the license, please try again.", 'wp-migrate-db' ),
 		) );
 	}
 
