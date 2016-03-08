@@ -7,6 +7,8 @@ Author: Delicious Brains
 Version: 1.4.1
 Author URI: http://deliciousbrains.com
 Network: True
+Text Domain: wp-migrate-db
+Domain Path: /languages/
 */
 
 // Copyright (c) 2013 Delicious Brains. All rights reserved.
@@ -51,6 +53,6 @@ function wp_migrate_db_pro_init() {
 	// if neither WordPress admin nor running from wp-cli, exit quickly to prevent performance impact
 	if ( !is_admin() && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) return;
 
-	load_plugin_textdomain( 'wp-migrate-db-pro', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	load_plugin_textdomain( 'wp-migrate-db', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
 add_action( 'init', 'wp_migrate_db_pro_init' );

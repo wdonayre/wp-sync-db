@@ -203,17 +203,17 @@ class WPMDBPro extends WPMDBPro_Base {
 		$dest = trailingslashit( $mu_dir ) . 'wp-migrate-db-pro-compatibility.php';
 		if ( '1' === trim( $_POST['install'] ) ) { // install MU plugin
 			if ( ! wp_mkdir_p( $mu_dir ) ) {
-				_e( sprintf( 'The following directory could not be created: %s', $mu_dir ), 'wp-migrate-db-pro' );
+				_e( sprintf( 'The following directory could not be created: %s', $mu_dir ), 'wp-migrate-db' );
 				exit;
 			}
 
 			if ( ! copy( $source, $dest ) ) {
-				_e( sprintf( 'Could not copy the compatibility plugin from %1$s to %2$s', $source, $dest ), 'wp-migrate-db-pro' );
+				_e( sprintf( 'Could not copy the compatibility plugin from %1$s to %2$s', $source, $dest ), 'wp-migrate-db' );
 				exit;
 			}
 		} else { // uninstall MU plugin
 			if ( file_exists( $dest ) && ! unlink( $dest ) ) {
-				_e( sprintf( 'Could not remove the compatibility plugin from %s', $dest ), 'wp-migrate-db-pro' );
+				_e( sprintf( 'Could not remove the compatibility plugin from %s', $dest ), 'wp-migrate-db' );
 				exit;
 			}
 		}
@@ -311,7 +311,7 @@ class WPMDBPro extends WPMDBPro_Base {
 
 		$addons_available = ( $decoded_response['addons_available'] == '1' );
 		if( ! $addons_available ) { ?>
-			<p class="inline-message warning"><strong><?php _e( 'Addons Unavailable', 'wp-migrate-db-pro' ); ?></strong> &ndash; <?php _e( 'Addons are not included with the Personal license. Visit <a href="https://deliciousbrains.com/my-account/" target="_blank">My Account</a> to upgrade in just a few clicks.', 'wp-migrate-db-pro' ); ?></p>
+			<p class="inline-message warning"><strong><?php _e( 'Addons Unavailable', 'wp-migrate-db' ); ?></strong> &ndash; <?php _e( 'Addons are not included with the Personal license. Visit <a href="https://deliciousbrains.com/my-account/" target="_blank">My Account</a> to upgrade in just a few clicks.', 'wp-migrate-db' ); ?></p>
 			<?php
 		}
 
@@ -324,24 +324,24 @@ class WPMDBPro extends WPMDBPro_Base {
 			$plugin_ids = array_keys( get_plugins() );
 
 			if ( in_array( $plugin_file, $plugin_ids ) ) {
-				$actions = '<span class="status">' . __( 'Installed', 'wp-migrate-db-pro' );
+				$actions = '<span class="status">' . __( 'Installed', 'wp-migrate-db' );
 				if ( is_plugin_active( $plugin_file ) ) {
-					$actions .= ' &amp; ' . __( 'Activated', 'wp-migrate-db-pro' ) . '</span>';
+					$actions .= ' &amp; ' . __( 'Activated', 'wp-migrate-db' ) . '</span>';
 				}
 				else {
 					$activate_url = wp_nonce_url( network_admin_url( 'plugins.php?action=activate&amp;plugin=' . $plugin_file ), 'activate-plugin_'  . $plugin_file );
-					$actions .= sprintf( '</span> <a class="action" href="%s">%s</a>', $activate_url, __( 'Activate', 'wp-migrate-db-pro' ) );
+					$actions .= sprintf( '</span> <a class="action" href="%s">%s</a>', $activate_url, __( 'Activate', 'wp-migrate-db' ) );
 				}
 			}
 			else {
 				$install_url = wp_nonce_url( network_admin_url( 'update.php?action=install-plugin&plugin=' . $key ), 'install-plugin_' . $key );
-				$actions = sprintf( '<a class="action" href="%s">%s</a>', $install_url, __( 'Install', 'wp-migrate-db-pro' ) );
+				$actions = sprintf( '<a class="action" href="%s">%s</a>', $install_url, __( 'Install', 'wp-migrate-db' ) );
 			}
 
 			$required_version = $this->get_required_version( $key );
 
 			$download_url = $this->get_plugin_update_download_url( $key, $this->is_beta_version( $required_version ) );
-			$actions .= sprintf( '<a class="action" href="%s">%s</a>', $download_url, __( 'Download', 'wp-migrate-db-pro' ) );
+			$actions .= sprintf( '<a class="action" href="%s">%s</a>', $download_url, __( 'Download', 'wp-migrate-db' ) );
 			?>
 			<article class="addon <?php echo esc_attr( $key ); ?>">
 				<div class="desc">
@@ -416,7 +416,7 @@ class WPMDBPro extends WPMDBPro_Base {
 	}
 
 	function plugin_action_links( $links ) {
-		$link = sprintf( '<a href="%s">%s</a>', network_admin_url( $this->plugin_base ), __( 'Settings', 'wp-migrate-db-pro' ) );
+		$link = sprintf( '<a href="%s">%s</a>', network_admin_url( $this->plugin_base ), __( 'Settings', 'wp-migrate-db' ) );
 		array_unshift( $links, $link );
 		return $links;
 	}
@@ -734,12 +734,12 @@ class WPMDBPro extends WPMDBPro_Base {
 
 		$tmp_file_path = wp_tempnam( $tmp_file_name );
 		if ( !isset( $_FILES['chunk']['tmp_name'] ) || !move_uploaded_file( $_FILES['chunk']['tmp_name'], $tmp_file_path ) ) {
-			$result = $this->end_ajax( __( 'Could not upload the SQL to the server. (#135)', 'wp-migrate-db-pro' ) );
+			$result = $this->end_ajax( __( 'Could not upload the SQL to the server. (#135)', 'wp-migrate-db' ) );
 			return $result;
 		}
 
 		if ( false === ( $chunk = file_get_contents( $tmp_file_path ) ) ) {
-			$result = $this->end_ajax( __( 'Could not read the SQL file we uploaded to the server. (#136)', 'wp-migrate-db-pro' ) );
+			$result = $this->end_ajax( __( 'Could not read the SQL file we uploaded to the server. (#136)', 'wp-migrate-db' ) );
 			return $result;
 		}
 
@@ -755,7 +755,7 @@ class WPMDBPro extends WPMDBPro_Base {
 		}
 
 		if ( $this->settings['allow_push'] != true ) {
-			$result = $this->end_ajax( __( 'The connection succeeded but the remote site is configured to reject push connections. You can change this in the "settings" tab on the remote site. (#133)', 'wp-migrate-db-pro' ) );
+			$result = $this->end_ajax( __( 'The connection succeeded but the remote site is configured to reject push connections. You can change this in the "settings" tab on the remote site. (#133)', 'wp-migrate-db' ) );
 			return $result;
 		}
 
@@ -992,7 +992,7 @@ class WPMDBPro extends WPMDBPro_Base {
 		}
 
 		if ( $this->settings['allow_pull'] != true ) {
-			$result = $this->end_ajax( __( 'The connection succeeded but the remote site is configured to reject pull connections. You can change this in the "settings" tab on the remote site. (#132)', 'wp-migrate-db-pro' ) );
+			$result = $this->end_ajax( __( 'The connection succeeded but the remote site is configured to reject pull connections. You can change this in the "settings" tab on the remote site. (#132)', 'wp-migrate-db' ) );
 			return $result;
 		}
 
@@ -1061,7 +1061,7 @@ class WPMDBPro extends WPMDBPro_Base {
 			$return = @unserialize( trim( $response ) );
 
 			if ( false === $return ) {
-				$error_msg = __( 'Failed attempting to unserialize the response from the remote server. Please contact support.', 'wp-migrate-db-pro' );
+				$error_msg = __( 'Failed attempting to unserialize the response from the remote server. Please contact support.', 'wp-migrate-db' );
 				$return = array( 'wpmdb_error' => 1, 'body' => $error_msg );
 				$this->log_error( $error_msg, $response );
 				$result = $this->end_ajax( json_encode( $return ) );
@@ -1108,12 +1108,12 @@ class WPMDBPro extends WPMDBPro_Base {
 			} else {
 				$return['error'] = 1;
 				if ( $_POST['intent'] == 'pull' ) {
-					$intent = __( 'pull', 'wp-migrate-db-pro' );
+					$intent = __( 'pull', 'wp-migrate-db' );
 				}
 				else {
-					$intent = __( 'push', 'wp-migrate-db-pro' );
+					$intent = __( 'push', 'wp-migrate-db' );
 				}
-				$return['message'] = sprintf( __( 'The connection succeeded but the remote site is configured to reject %s connections. You can change this in the "settings" tab on the remote site. (#110)', 'wp-migrate-db-pro'), $intent );
+				$return['message'] = sprintf( __( 'The connection succeeded but the remote site is configured to reject %s connections. You can change this in the "settings" tab on the remote site. (#110)', 'wp-migrate-db'), $intent );
 			}
 		}
 		else {
@@ -1205,7 +1205,7 @@ class WPMDBPro extends WPMDBPro_Base {
 	function ajax_verify_connection_to_remote_site() {
 		$this->check_ajax_referer( 'verify-connection-to-remote-site' );
 		if ( !$this->is_valid_licence() ) {
-			$message = __( 'Please activate your license before attempting a pull or push migration.', 'wp-migrate-db-pro' );
+			$message = __( 'Please activate your license before attempting a pull or push migration.', 'wp-migrate-db' );
 			$return = array( 'wpmdb_error' => 1, 'body' => $message );
 			$result = $this->end_ajax( json_encode( $return ) );
 			return $result;
@@ -1234,7 +1234,7 @@ class WPMDBPro extends WPMDBPro_Base {
 		$response = unserialize( trim( $response ) );
 
 		if ( false === $response ) {
-			$error_msg = __( 'Failed attempting to unserialize the response from the remote server. Please contact support.', 'wp-migrate-db-pro' );
+			$error_msg = __( 'Failed attempting to unserialize the response from the remote server. Please contact support.', 'wp-migrate-db' );
 			$return = array( 'wpmdb_error' => 1, 'body' => $error_msg );
 			$this->log_error( $error_msg );
 			$result = $this->end_ajax( json_encode( $return ) );
@@ -1273,7 +1273,7 @@ class WPMDBPro extends WPMDBPro_Base {
 		$filtered_post = $this->filter_post_elements( $_POST, array( 'action', 'intent' ) );
 		if ( !$this->verify_signature( $filtered_post, $this->settings['key'] ) ) {
 			$return['error'] = 1;
-			$return['message'] = $this->invalid_content_verification_error . ' (#120) <a href="#" class="try-again js-action-link">' . __( 'Try again?', 'wp-migrate-db-pro' ) . '</a>';
+			$return['message'] = $this->invalid_content_verification_error . ' (#120) <a href="#" class="try-again js-action-link">' . __( 'Try again?', 'wp-migrate-db' ) . '</a>';
 			$this->log_error( $this->invalid_content_verification_error . ' (#120)', $filtered_post );
 			$result = $this->end_ajax( serialize( $return ) );
 			return $result;
@@ -1283,12 +1283,12 @@ class WPMDBPro extends WPMDBPro_Base {
 			$return['error'] = 1;
 
 			if ( $_POST['intent'] == 'pull' ) {
-				$intent = __( 'pull', 'wp-migrate-db-pro' );
+				$intent = __( 'pull', 'wp-migrate-db' );
 			}
 			else {
-				$intent = __( 'push', 'wp-migrate-db-pro' );
+				$intent = __( 'push', 'wp-migrate-db' );
 			}
-			$return['message'] = sprintf( __( 'The connection succeeded but the remote site is configured to reject %s connections. You can change this in the "settings" tab on the remote site. (#122) <a href="#" class="try-again js-action-link">Try again?</a>', 'wp-migrate-db-pro' ), $intent );
+			$return['message'] = sprintf( __( 'The connection succeeded but the remote site is configured to reject %s connections. You can change this in the "settings" tab on the remote site. (#122) <a href="#" class="try-again js-action-link">Try again?</a>', 'wp-migrate-db' ), $intent );
 			$result = $this->end_ajax( serialize( $return ) );
 			return $result;
 		}
@@ -1480,7 +1480,7 @@ class WPMDBPro extends WPMDBPro_Base {
 
 			<div id="icon-tools" class="icon32"><br /></div><h2>Migrate DB Pro</h2>
 
-			<h2 class="nav-tab-wrapper"><a href="#" class="nav-tab nav-tab-active js-action-link migrate" data-div-name="migrate-tab"><?php _e( 'Migrate', 'wp-migrate-db-pro' ); ?></a><a href="#" class="nav-tab js-action-link settings" data-div-name="settings-tab"><?php _e( 'Settings', 'wp-migrate-db-pro' ); ?></a><a href="#" class="nav-tab js-action-link addons" data-div-name="addons-tab"><?php _e( 'Addons', 'wp-migrate-db-pro' ); ?></a><a href="#" class="nav-tab js-action-link help" data-div-name="help-tab"><?php _e( 'Help', 'wp-migrate-db-pro' ); ?></a></h2>
+			<h2 class="nav-tab-wrapper"><a href="#" class="nav-tab nav-tab-active js-action-link migrate" data-div-name="migrate-tab"><?php _e( 'Migrate', 'wp-migrate-db' ); ?></a><a href="#" class="nav-tab js-action-link settings" data-div-name="settings-tab"><?php _e( 'Settings', 'wp-migrate-db' ); ?></a><a href="#" class="nav-tab js-action-link addons" data-div-name="addons-tab"><?php _e( 'Addons', 'wp-migrate-db' ); ?></a><a href="#" class="nav-tab js-action-link help" data-div-name="help-tab"><?php _e( 'Help', 'wp-migrate-db' ); ?></a></h2>
 
 			<?php do_action( 'wpmdb_notices' ); ?>
 
@@ -1500,7 +1500,7 @@ class WPMDBPro extends WPMDBPro_Base {
 				?>
 				<div class="updated warning inline-message">
 					<strong>Update Required</strong> &mdash;
-					<?php printf( __( 'The version of the %1$s addon you have installed%2$s is out-of-date and will not work with this version WP Migrate DB Pro. <a href="%3$s">Update Now</a>', 'wp-migrate-db-pro' ), $addon['name'], $version, $update_url ); ?>
+					<?php printf( __( 'The version of the %1$s addon you have installed%2$s is out-of-date and will not work with this version WP Migrate DB Pro. <a href="%3$s">Update Now</a>', 'wp-migrate-db' ), $addon['name'], $version, $update_url ); ?>
 				</div>
 			<?php
 			}
@@ -1509,9 +1509,9 @@ class WPMDBPro extends WPMDBPro_Base {
 			if ( function_exists( 'ini_get' ) && ini_get( 'safe_mode' ) && !$hide_warning ) { ?>
 				<div class="updated warning inline-message">
 					<?php
-					_e( "<strong>PHP Safe Mode Enabled</strong> &mdash; We do not officially support running this plugin in safe mode because <code>set_time_limit()</code> has no effect. Therefore we can't extend the run time of the script and ensure it doesn't time out before the migration completes. We haven't disabled the plugin however, so you're free to cross your fingers and hope for the best. However, if you have trouble, we can't help you until you turn off safe mode.", 'wp-migrate-db-pro' );
+					_e( "<strong>PHP Safe Mode Enabled</strong> &mdash; We do not officially support running this plugin in safe mode because <code>set_time_limit()</code> has no effect. Therefore we can't extend the run time of the script and ensure it doesn't time out before the migration completes. We haven't disabled the plugin however, so you're free to cross your fingers and hope for the best. However, if you have trouble, we can't help you until you turn off safe mode.", 'wp-migrate-db' );
 					if ( function_exists( 'ini_get' ) ) {
-						printf( __( 'Your current PHP run time limit is set to %s seconds.', 'wp-migrate-db-pro' ), ini_get( 'max_execution_time' ) );
+						printf( __( 'Your current PHP run time limit is set to %s seconds.', 'wp-migrate-db' ), ini_get( 'max_execution_time' ) );
 					} ?>
 				</div>
 				<?php
@@ -1519,7 +1519,7 @@ class WPMDBPro extends WPMDBPro_Base {
 			?>
 
 			<div class="updated warning ie-warning inline-message" style="display: none;">
-				<?php _e( "<strong>Internet Explorer Not Supported</strong> &mdash; Less than 2% of our customers use IE, so we've decided not to spend time supporting it. We ask that you use Firefox or a Webkit-based browser like Chrome or Safari instead. If this is a problem for you, please let us know.", 'wp-migrate-db-pro' ); ?>
+				<?php _e( "<strong>Internet Explorer Not Supported</strong> &mdash; Less than 2% of our customers use IE, so we've decided not to spend time supporting it. We ask that you use Firefox or a Webkit-based browser like Chrome or Safari instead. If this is a problem for you, please let us know.", 'wp-migrate-db' ); ?>
 			</div>
 
 			<?php
@@ -1528,9 +1528,9 @@ class WPMDBPro extends WPMDBPro_Base {
 				?>
 				<div class="updated warning inline-message">
 					<?php
-					_e( "<strong>PHP Function Disabled</strong> &mdash; The <code>set_time_limit()</code> function is currently disabled on your server. We use this function to ensure that the migration doesn't time out. We haven't disabled the plugin however, so you're free to cross your fingers and hope for the best. You may want to contact your web host to enable this function.", 'wp-migrate-db-pro' );
+					_e( "<strong>PHP Function Disabled</strong> &mdash; The <code>set_time_limit()</code> function is currently disabled on your server. We use this function to ensure that the migration doesn't time out. We haven't disabled the plugin however, so you're free to cross your fingers and hope for the best. You may want to contact your web host to enable this function.", 'wp-migrate-db' );
 					if ( function_exists( 'ini_get' ) ) {
-						printf( __( 'Your current PHP run time limit is set to %s seconds.', 'wp-migrate-db-pro' ), ini_get( 'max_execution_time' ) );
+						printf( __( 'Your current PHP run time limit is set to %s seconds.', 'wp-migrate-db' ), ini_get( 'max_execution_time' ) );
 					} ?>
 				</div>
 				<?php
@@ -1700,7 +1700,7 @@ class WPMDBPro extends WPMDBPro_Base {
 		$table_structure = $wpdb->get_results( "DESCRIBE " . $this->backquote( $table ) );
 
 		if ( ! $table_structure ) {
-			$this->error = __( 'Failed to retrieve table structure, please ensure your database is online. (#125)', 'wp-migrate-db-pro' );
+			$this->error = __( 'Failed to retrieve table structure, please ensure your database is online. (#125)', 'wp-migrate-db' );
 			return false;
 		}
 
@@ -1718,7 +1718,7 @@ class WPMDBPro extends WPMDBPro_Base {
 			if ( $this->form_data['action'] == 'savefile' || $_POST['stage'] == 'backup' ) {
 				$this->stow( "\n\n" );
 				$this->stow( "#\n" );
-				$this->stow( "# " . sprintf( __( 'Delete any existing table %s', 'wp-migrate-db-pro' ), $this->backquote( $table ) ) . "\n" );
+				$this->stow( "# " . sprintf( __( 'Delete any existing table %s', 'wp-migrate-db' ), $this->backquote( $table ) ) . "\n" );
 				$this->stow( "#\n" );
 				$this->stow( "\n" );
 				$this->stow( "DROP TABLE IF EXISTS " . $this->backquote( $table ) . ";\n" );
@@ -1731,7 +1731,7 @@ class WPMDBPro extends WPMDBPro_Base {
 			if ( $this->form_data['action'] == 'savefile' || $_POST['stage'] == 'backup' ) {
 				$this->stow( "\n\n" );
 				$this->stow( "#\n" );
-				$this->stow( "# " . sprintf( __( 'Table structure of table %s', 'wp-migrate-db-pro' ), $this->backquote( $table ) ) . "\n" );
+				$this->stow( "# " . sprintf( __( 'Table structure of table %s', 'wp-migrate-db' ), $this->backquote( $table ) ) . "\n" );
 				$this->stow( "#\n" );
 				$this->stow( "\n" );
 			}
@@ -1739,7 +1739,7 @@ class WPMDBPro extends WPMDBPro_Base {
 			$create_table = $wpdb->get_results( "SHOW CREATE TABLE " . $this->backquote( $table ), ARRAY_N );
 
 			if ( false === $create_table ) {
-				$this->error = __( 'Failed to generate the create table query, please ensure your database is online. (#126)', 'wp-migrate-db-pro' );
+				$this->error = __( 'Failed to generate the create table query, please ensure your database is online. (#126)', 'wp-migrate-db' );
 				return false;
 			}
 
@@ -1774,7 +1774,7 @@ class WPMDBPro extends WPMDBPro_Base {
 			if ( $this->form_data['action'] == 'savefile' || $_POST['stage'] == 'backup' ) {
 				$this->stow( "\n\n" );
 				$this->stow( "#\n" );
-				$this->stow( '# ' . sprintf( __( 'Data contents of table %s', 'wp-migrate-db-pro' ), $this->backquote( $table ) ) . "\n" );
+				$this->stow( '# ' . sprintf( __( 'Data contents of table %s', 'wp-migrate-db' ), $this->backquote( $table ) ) . "\n" );
 				$this->stow( "#\n" );
 			}
 		}
@@ -2061,7 +2061,7 @@ class WPMDBPro extends WPMDBPro_Base {
 		if ( $this->form_data['action'] == 'savefile' || $_POST['stage'] == 'backup' ) {
 			$this->stow( "\n" );
 			$this->stow( "#\n" );
-			$this->stow( "# " . sprintf( __( 'End of data contents of table %s', 'wp-migrate-db-pro' ), $this->backquote( $table ) ) . "\n" );
+			$this->stow( "# " . sprintf( __( 'End of data contents of table %s', 'wp-migrate-db' ), $this->backquote( $table ) ) . "\n" );
 			$this->stow( "# --------------------------------------------------------\n" );
 			$this->stow( "\n" );
 
@@ -2190,11 +2190,11 @@ class WPMDBPro extends WPMDBPro_Base {
 
 	function db_backup_header() {
 		$charset = ( defined( 'DB_CHARSET' ) ? DB_CHARSET : 'utf8' );
-		$this->stow( "# " . __( 'WordPress MySQL database migration', 'wp-migrate-db-pro' ) . "\n", false );
+		$this->stow( "# " . __( 'WordPress MySQL database migration', 'wp-migrate-db' ) . "\n", false );
 		$this->stow( "#\n", false );
-		$this->stow( "# " . sprintf( __( 'Generated: %s', 'wp-migrate-db-pro' ), date( "l j. F Y H:i T" ) ) . "\n", false );
-		$this->stow( "# " . sprintf( __( 'Hostname: %s', 'wp-migrate-db-pro' ), DB_HOST ) . "\n", false );
-		$this->stow( "# " . sprintf( __( 'Database: %s', 'wp-migrate-db-pro' ), $this->backquote( DB_NAME ) ) . "\n", false );
+		$this->stow( "# " . sprintf( __( 'Generated: %s', 'wp-migrate-db' ), date( "l j. F Y H:i T" ) ) . "\n", false );
+		$this->stow( "# " . sprintf( __( 'Hostname: %s', 'wp-migrate-db' ), DB_HOST ) . "\n", false );
+		$this->stow( "# " . sprintf( __( 'Database: %s', 'wp-migrate-db' ), $this->backquote( DB_NAME ) ) . "\n", false );
 		$this->stow( "# --------------------------------------------------------\n\n", false );
 		$this->stow( "/*!40101 SET NAMES $charset */;\n\n", false );
 		$this->stow( "SET sql_mode='NO_AUTO_VALUE_ON_ZERO';\n\n", false );
@@ -2234,12 +2234,12 @@ class WPMDBPro extends WPMDBPro_Base {
 		if ( $this->form_data['action'] == 'savefile' || $_POST['stage'] == 'backup' ) {
 			if ( $this->gzip() && isset( $this->form_data['gzip_file'] ) ) {
 				if ( ! @gzwrite( $this->fp, $query_line ) ) {
-					$this->error = __( 'Failed to write the gzipped SQL data to the file. (#127)', 'wp-migrate-db-pro' );
+					$this->error = __( 'Failed to write the gzipped SQL data to the file. (#127)', 'wp-migrate-db' );
 					return false;
 				}
 			} else {
 				if ( false === @fwrite( $this->fp, $query_line ) ) {
-					$this->error = __( 'Failed to write the SQL data to the file. (#128)', 'wp-migrate-db-pro' );
+					$this->error = __( 'Failed to write the SQL data to the file. (#128)', 'wp-migrate-db' );
 					return false;
 				}
 			}
@@ -2431,75 +2431,75 @@ class WPMDBPro extends WPMDBPro_Base {
 		wp_enqueue_script( 'wp-migrate-db-pro-script', $src, array( 'jquery' ), $version, true );
 
 		wp_localize_script( 'wp-migrate-db-pro-script', 'wpmdb_i10n', array(
-			'max_request_size_problem' => __( "A problem occurred when trying to change the maximum request size, please try again.", 'wp-migrate-db-pro' ),
-			'license_check_problem' => __( "A problem occurred when trying to check the license, please try again.", 'wp-migrate-db-pro' ),
-			'establishing_remote_connection' => __( "Establishing connection to remote server, please wait", 'wp-migrate-db-pro' ),
-			'connection_local_server_problem' => __( "A problem occurred when attempting to connect to the local server, please check the details and try again.", 'wp-migrate-db-pro' ),
-			'enter_license_key' => __( "Please enter your license key.", 'wp-migrate-db-pro' ),
-			'register_license_problem' => __( "A problem occurred when trying to register the license, please try again.", 'wp-migrate-db-pro' ),
-			'license_registered' => __( "Your license has been activated. You will now receive automatic updates and access to email support.", 'wp-migrate-db-pro' ),
-			'fetching_license' => __( "Fetching license details, please wait...", 'wp-migrate-db-pro' ),
-			'clear_log_problem' => __( "An error occurred when trying to clear the debug log. Please contact support. (#132)", 'wp-migrate-db-pro' ),
-			'update_log_problem' => __( "An error occurred when trying to update the debug log. Please contact support. (#133)", 'wp-migrate-db-pro' ),
-			'migrate_db_save' => __( "Migrate DB & Save", 'wp-migrate-db-pro' ),
-			'migrate_db' => __( "Migrate DB", 'wp-migrate-db-pro' ),
-			'please_select_one_table' => __( "Please select at least one table to migrate.", 'wp-migrate-db-pro' ),
-			'enter_name_for_profile' => __( "Please enter a name for your migration profile.", 'wp-migrate-db-pro' ),
-			'save_profile_problem' => __( "An error occurred when attempting to save the migration profile. Please see the Help tab for details on how to request support. (#118)", 'wp-migrate-db-pro' ),
-			'exporting_complete' => __( "Exporting complete", 'wp-migrate-db-pro' ),
-			'exporting_please_wait' => __( "Exporting, please wait...", 'wp-migrate-db-pro' ),
-			'please_wait' => __( "please wait...", 'wp-migrate-db-pro' ),
-			'complete' => __( "complete", 'wp-migrate-db-pro' ),
-			'migration_failed' => __( "Migration failed", 'wp-migrate-db-pro' ),
-			'backing_up' => __( "Backing up", 'wp-migrate-db-pro' ),
-			'migrating' => __( "Migrating", 'wp-migrate-db-pro' ),
-			'status' => __( "Status", 'wp-migrate-db-pro' ),
-			'response' => __( "Response", 'wp-migrate-db-pro' ),
-			'table_process_problem' => __( "A problem occurred when attempting to process the following table (#113)", 'wp-migrate-db-pro' ),
-			'table_process_problem_empty_response' => __( "A problem occurred when processing the following table. We were expecting a response in JSON format but instead received an empty response.", 'wp-migrate-db-pro' ),
-			'completed_with_some_errors' => __( "Migration completed with some errors", 'wp-migrate-db-pro' ),
-			'completed_dump_located_at' => __( "Migration complete, your backup is located at:", 'wp-migrate-db-pro' ),
-			'finalize_tables_problem' => __( "A problem occurred when finalizing the backup. (#132)", 'wp-migrate-db-pro' ),
-			'saved' => __( "Saved", 'wp-migrate-db-pro' ),
-			'reset_api_key' => __( "Any sites setup to use the current API key will no longer be able to connect. You will need to update those sites with the newly generated API key. Do you wish to continue?", 'wp-migrate-db-pro' ),
-			'reset_api_key_problem' => __( "An error occurred when trying to generate the API key. Please see the Help tab for details on how to request support. (#105)", 'wp-migrate-db-pro' ),
-			'remove_profile' => __( "You are removing the following migration profile. This cannot be undone. Do you wish to continue?", 'wp-migrate-db-pro' ),
-			'remove_profile_problem' => __( "An error occurred when trying to delete the profile. Please see the Help tab for details on how to request support. (#106)", 'wp-migrate-db-pro' ),
-			'remove_profile_not_found' => __( "The selected migration profile could not be deleted because it was not found.\nPlease refresh this page to see an accurate list of the currently available migration profiles.", 'wp-migrate-db-pro' ),
-			'change_connection_info' => __( "If you change the connection details, you will lose any replaces and table selections you have made below. Do you wish to continue?", 'wp-migrate-db-pro' ),
-			'enter_connection_info' => __( "Please enter the connection information above to continue.", 'wp-migrate-db-pro' ),
-			'save_settings_problem' => __( "An error occurred when trying to save the settings. Please try again. If the problem persists, please see the Help tab for details on how to request support. (#108)", 'wp-migrate-db-pro' ),
-			'connection_info_missing' => __( "The connection information appears to be missing, please enter it to continue.", 'wp-migrate-db-pro' ),
-			'connection_info_incorrect' => __( "The connection information appears to be incorrect, it should consist of two lines. The first being the remote server's URL and the second being the secret key.", 'wp-migrate-db-pro' ),
-			'connection_info_url_invalid' => __( "The URL on the first line appears to be invalid, please check it and try again.", 'wp-migrate-db-pro' ),
-			'connection_info_key_invalid' => __( "The secret key on the second line appears to be invalid. It should be a 32 character string that consists of letters, numbers and special characters only.", 'wp-migrate-db-pro' ),
-			'connection_info_local_url' => __( "It appears you've entered the URL for this website, you need to provide the URL of the remote website instead.", 'wp-migrate-db-pro' ),
-			'connection_info_local_key' => __( "It appears you've entered the secret key for this website, you need to provide the secret key for the remote website instead.", 'wp-migrate-db-pro' ),
-			'time_elapsed' => __( "Time Elapsed:", 'wp-migrate-db-pro' ),
-			'pause' => __( "Pause", 'wp-migrate-db-pro' ),
-			'migration_paused' => __( "Migration Paused", 'wp-migrate-db-pro' ),
-			'resume' => __( "Resume", 'wp-migrate-db-pro' ),
-			'completing_current_request' => __( "Completing current request", 'wp-migrate-db-pro' ),
-			'cancelling_migration' => __( "Cancelling migration", 'wp-migrate-db-pro' ),
-			'paused' => __( "Paused", 'wp-migrate-db-pro' ),
-			'removing_local_sql' => __( "Removing the local MySQL export file", 'wp-migrate-db-pro' ),
-			'removing_local_backup' => __( "Removing the local backup MySQL export file", 'wp-migrate-db-pro' ),
-			'removing_local_temp_tables' => __( "Removing the local temporary tables", 'wp-migrate-db-pro' ),
-			'removing_remote_sql' => __( "Removing the remote backup MySQL export file", 'wp-migrate-db-pro' ),
-			'removing_remote_temp_tables' => __( "Removing the remote temporary tables", 'wp-migrate-db-pro' ),
-			'migration_cancellation_failed' => __( "Migration cancellation failed", 'wp-migrate-db-pro' ),
-			'manually_remove_temp_files' => __( "A problem occurred while cancelling the migration, you may have to manually delete some temporary files / tables.", 'wp-migrate-db-pro' ),
-			'migration_cancelled' => __( "Migration cancelled", 'wp-migrate-db-pro' ),
-			'migration_complete' => __( "Migration complete", 'wp-migrate-db-pro' ),
-			'finalizing_migration' => __( "Finalizing migration", 'wp-migrate-db-pro' ),
-			'blacklist_problem'	=> __( "A problem occurred when trying to add plugins to backlist.", 'wp-migrate-db-pro' ),
-			'mu_plugin_confirmation' => __( "If confirmed we will install an additional WordPress 'Must Use' plugin. This plugin will allow us to control which plugins are loaded during WP Migrate DB Pro specific operations. Do you wish to continue?", 'wp-migrate-db-pro' ),
-			'plugin_compatibility_settings_problem' => __( "A problem occurred when trying to change the plugin compatibility setting.", 'wp-migrate-db-pro' ),
-			'sure' => __( "Sure?", 'wp-migrate-db-pro' ),
-			'pull_migration_label_migrating' => __( 'Pulling from %s, please wait...', 'wp-migrate-db-pro' ),
-			'pull_migration_label_completed' => __( 'Pulling from %s complete', 'wp-migrate-db-pro' ),
-			'push_migration_label_migrating' => __( 'Pushing to %s, please wait...', 'wp-migrate-db-pro' ),
-			'push_migration_label_completed' => __( 'Pushing to %s complete', 'wp-migrate-db-pro' ),
+			'max_request_size_problem' => __( "A problem occurred when trying to change the maximum request size, please try again.", 'wp-migrate-db' ),
+			'license_check_problem' => __( "A problem occurred when trying to check the license, please try again.", 'wp-migrate-db' ),
+			'establishing_remote_connection' => __( "Establishing connection to remote server, please wait", 'wp-migrate-db' ),
+			'connection_local_server_problem' => __( "A problem occurred when attempting to connect to the local server, please check the details and try again.", 'wp-migrate-db' ),
+			'enter_license_key' => __( "Please enter your license key.", 'wp-migrate-db' ),
+			'register_license_problem' => __( "A problem occurred when trying to register the license, please try again.", 'wp-migrate-db' ),
+			'license_registered' => __( "Your license has been activated. You will now receive automatic updates and access to email support.", 'wp-migrate-db' ),
+			'fetching_license' => __( "Fetching license details, please wait...", 'wp-migrate-db' ),
+			'clear_log_problem' => __( "An error occurred when trying to clear the debug log. Please contact support. (#132)", 'wp-migrate-db' ),
+			'update_log_problem' => __( "An error occurred when trying to update the debug log. Please contact support. (#133)", 'wp-migrate-db' ),
+			'migrate_db_save' => __( "Migrate DB & Save", 'wp-migrate-db' ),
+			'migrate_db' => __( "Migrate DB", 'wp-migrate-db' ),
+			'please_select_one_table' => __( "Please select at least one table to migrate.", 'wp-migrate-db' ),
+			'enter_name_for_profile' => __( "Please enter a name for your migration profile.", 'wp-migrate-db' ),
+			'save_profile_problem' => __( "An error occurred when attempting to save the migration profile. Please see the Help tab for details on how to request support. (#118)", 'wp-migrate-db' ),
+			'exporting_complete' => __( "Exporting complete", 'wp-migrate-db' ),
+			'exporting_please_wait' => __( "Exporting, please wait...", 'wp-migrate-db' ),
+			'please_wait' => __( "please wait...", 'wp-migrate-db' ),
+			'complete' => __( "complete", 'wp-migrate-db' ),
+			'migration_failed' => __( "Migration failed", 'wp-migrate-db' ),
+			'backing_up' => __( "Backing up", 'wp-migrate-db' ),
+			'migrating' => __( "Migrating", 'wp-migrate-db' ),
+			'status' => __( "Status", 'wp-migrate-db' ),
+			'response' => __( "Response", 'wp-migrate-db' ),
+			'table_process_problem' => __( "A problem occurred when attempting to process the following table (#113)", 'wp-migrate-db' ),
+			'table_process_problem_empty_response' => __( "A problem occurred when processing the following table. We were expecting a response in JSON format but instead received an empty response.", 'wp-migrate-db' ),
+			'completed_with_some_errors' => __( "Migration completed with some errors", 'wp-migrate-db' ),
+			'completed_dump_located_at' => __( "Migration complete, your backup is located at:", 'wp-migrate-db' ),
+			'finalize_tables_problem' => __( "A problem occurred when finalizing the backup. (#132)", 'wp-migrate-db' ),
+			'saved' => __( "Saved", 'wp-migrate-db' ),
+			'reset_api_key' => __( "Any sites setup to use the current API key will no longer be able to connect. You will need to update those sites with the newly generated API key. Do you wish to continue?", 'wp-migrate-db' ),
+			'reset_api_key_problem' => __( "An error occurred when trying to generate the API key. Please see the Help tab for details on how to request support. (#105)", 'wp-migrate-db' ),
+			'remove_profile' => __( "You are removing the following migration profile. This cannot be undone. Do you wish to continue?", 'wp-migrate-db' ),
+			'remove_profile_problem' => __( "An error occurred when trying to delete the profile. Please see the Help tab for details on how to request support. (#106)", 'wp-migrate-db' ),
+			'remove_profile_not_found' => __( "The selected migration profile could not be deleted because it was not found.\nPlease refresh this page to see an accurate list of the currently available migration profiles.", 'wp-migrate-db' ),
+			'change_connection_info' => __( "If you change the connection details, you will lose any replaces and table selections you have made below. Do you wish to continue?", 'wp-migrate-db' ),
+			'enter_connection_info' => __( "Please enter the connection information above to continue.", 'wp-migrate-db' ),
+			'save_settings_problem' => __( "An error occurred when trying to save the settings. Please try again. If the problem persists, please see the Help tab for details on how to request support. (#108)", 'wp-migrate-db' ),
+			'connection_info_missing' => __( "The connection information appears to be missing, please enter it to continue.", 'wp-migrate-db' ),
+			'connection_info_incorrect' => __( "The connection information appears to be incorrect, it should consist of two lines. The first being the remote server's URL and the second being the secret key.", 'wp-migrate-db' ),
+			'connection_info_url_invalid' => __( "The URL on the first line appears to be invalid, please check it and try again.", 'wp-migrate-db' ),
+			'connection_info_key_invalid' => __( "The secret key on the second line appears to be invalid. It should be a 32 character string that consists of letters, numbers and special characters only.", 'wp-migrate-db' ),
+			'connection_info_local_url' => __( "It appears you've entered the URL for this website, you need to provide the URL of the remote website instead.", 'wp-migrate-db' ),
+			'connection_info_local_key' => __( "It appears you've entered the secret key for this website, you need to provide the secret key for the remote website instead.", 'wp-migrate-db' ),
+			'time_elapsed' => __( "Time Elapsed:", 'wp-migrate-db' ),
+			'pause' => __( "Pause", 'wp-migrate-db' ),
+			'migration_paused' => __( "Migration Paused", 'wp-migrate-db' ),
+			'resume' => __( "Resume", 'wp-migrate-db' ),
+			'completing_current_request' => __( "Completing current request", 'wp-migrate-db' ),
+			'cancelling_migration' => __( "Cancelling migration", 'wp-migrate-db' ),
+			'paused' => __( "Paused", 'wp-migrate-db' ),
+			'removing_local_sql' => __( "Removing the local MySQL export file", 'wp-migrate-db' ),
+			'removing_local_backup' => __( "Removing the local backup MySQL export file", 'wp-migrate-db' ),
+			'removing_local_temp_tables' => __( "Removing the local temporary tables", 'wp-migrate-db' ),
+			'removing_remote_sql' => __( "Removing the remote backup MySQL export file", 'wp-migrate-db' ),
+			'removing_remote_temp_tables' => __( "Removing the remote temporary tables", 'wp-migrate-db' ),
+			'migration_cancellation_failed' => __( "Migration cancellation failed", 'wp-migrate-db' ),
+			'manually_remove_temp_files' => __( "A problem occurred while cancelling the migration, you may have to manually delete some temporary files / tables.", 'wp-migrate-db' ),
+			'migration_cancelled' => __( "Migration cancelled", 'wp-migrate-db' ),
+			'migration_complete' => __( "Migration complete", 'wp-migrate-db' ),
+			'finalizing_migration' => __( "Finalizing migration", 'wp-migrate-db' ),
+			'blacklist_problem'	=> __( "A problem occurred when trying to add plugins to backlist.", 'wp-migrate-db' ),
+			'mu_plugin_confirmation' => __( "If confirmed we will install an additional WordPress 'Must Use' plugin. This plugin will allow us to control which plugins are loaded during WP Migrate DB Pro specific operations. Do you wish to continue?", 'wp-migrate-db' ),
+			'plugin_compatibility_settings_problem' => __( "A problem occurred when trying to change the plugin compatibility setting.", 'wp-migrate-db' ),
+			'sure' => __( "Sure?", 'wp-migrate-db' ),
+			'pull_migration_label_migrating' => __( 'Pulling from %s, please wait...', 'wp-migrate-db' ),
+			'pull_migration_label_completed' => __( 'Pulling from %s complete', 'wp-migrate-db' ),
+			'push_migration_label_migrating' => __( 'Pushing to %s, please wait...', 'wp-migrate-db' ),
+			'push_migration_label_completed' => __( 'Pushing to %s complete', 'wp-migrate-db' ),
 		) );
 
 		wp_enqueue_script( 'jquery' );
@@ -2533,7 +2533,7 @@ class WPMDBPro extends WPMDBPro_Base {
 			unlink( $diskfile );
 			exit;
 		} else {
-			wp_die( __( 'Could not find the file to download:', 'wp-migrate-db-pro' ) . '<br />' . $diskfile );
+			wp_die( __( 'Could not find the file to download:', 'wp-migrate-db' ) . '<br />' . $diskfile );
 		}
 	}
 
@@ -2651,8 +2651,8 @@ class WPMDBPro extends WPMDBPro_Base {
 		wp_enqueue_script( 'wp-migrate-db-pro-plugin-update-script', $src, array( 'jquery' ), false, true );
 
 		wp_localize_script( 'wp-migrate-db-pro-plugin-update-script', 'wpmdb_l10n', array(
-			'check_license_again'  	=> __( "Check my license again", 'wp-migrate-db-pro' ),
-			'license_check_problem'	=> __( "A problem occurred when trying to check the license, please try again.", 'wp-migrate-db-pro' ),
+			'check_license_again'  	=> __( "Check my license again", 'wp-migrate-db' ),
+			'license_check_problem'	=> __( "A problem occurred when trying to check the license, please try again.", 'wp-migrate-db' ),
 		) );
 	}
 
@@ -2713,7 +2713,7 @@ class WPMDBPro extends WPMDBPro_Base {
 	}
 
 	function get_formatted_masked_licence() {
-		return sprintf( '<p class="masked-licence">%s <a href="%s">%s</a></p>', $this->mask_licence( $this->settings['licence'] ), network_admin_url( $this->plugin_base . '&nonce=' . wp_create_nonce( 'wpmdb-remove-licence' ) . '&wpmdb-remove-licence=1#settings' ), _x( 'Remove', '"Remove" in this context is used to delete a license, example formatting: xxxx-xxxx-xxxx Remove', 'wp-migrate-db-pro' ) );
+		return sprintf( '<p class="masked-licence">%s <a href="%s">%s</a></p>', $this->mask_licence( $this->settings['licence'] ), network_admin_url( $this->plugin_base . '&nonce=' . wp_create_nonce( 'wpmdb-remove-licence' ) . '&wpmdb-remove-licence=1#settings' ), _x( 'Remove', '"Remove" in this context is used to delete a license, example formatting: xxxx-xxxx-xxxx Remove', 'wp-migrate-db' ) );
 	}
 
 	function maybe_update_profile( $profile, $profile_id ) {
@@ -2858,12 +2858,12 @@ class WPMDBPro extends WPMDBPro_Base {
 		$dump_file = $this->get_upload_info( 'path' ) . DS . $dump_file;
 
 		if ( empty( $dump_file ) || false == file_exists( $dump_file ) ) {
-			_e( 'MySQL export file not found.', 'wp-migrate-db-pro' );
+			_e( 'MySQL export file not found.', 'wp-migrate-db' );
 			exit;
 		}
 
 		if ( false === @unlink( $dump_file ) ) {
-			e( 'Could not delete the MySQL export file.', 'wp-migrate-db-pro' );
+			e( 'Could not delete the MySQL export file.', 'wp-migrate-db' );
 			exit;
 		}
 	}

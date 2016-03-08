@@ -36,7 +36,7 @@ class WPMDBPro_Base {
 			)
 		);
 
-		$this->invalid_content_verification_error = __( 'Invalid content verification signature, please verify the connection information on the remote site and try again.', 'wp-migrate-db-pro' );
+		$this->invalid_content_verification_error = __( 'Invalid content verification signature, please verify the connection information on the remote site and try again.', 'wp-migrate-db' );
 
 		$this->transient_timeout = 60 * 60 * 12;
 		$this->transient_retry_timeout = 60 * 60 * 2;
@@ -151,23 +151,23 @@ class WPMDBPro_Base {
 				return $this->retry_remote_post( $url, $data, $scope, $args, $expecting_serial );
 			}
 			else if( isset( $response->errors['http_request_failed'][0] ) && strstr( $response->errors['http_request_failed'][0], 'timed out' ) ) {
-				$this->error = sprintf( __( 'The connection to the remote server has timed out, no changes have been committed. (#134 - scope: %s)', 'wp-migrate-db-pro' ), $scope );
+				$this->error = sprintf( __( 'The connection to the remote server has timed out, no changes have been committed. (#134 - scope: %s)', 'wp-migrate-db' ), $scope );
 			}
 			else if ( isset( $response->errors['http_request_failed'][0] ) && ( strstr( $response->errors['http_request_failed'][0], 'Could not resolve host' ) || strstr( $response->errors['http_request_failed'][0], 'couldn\'t connect to host' ) ) ) {
-				$this->error = sprintf( __( 'We could not find: %s. Are you sure this is the correct URL?', 'wp-migrate-db-pro' ), $_POST['url'] );
+				$this->error = sprintf( __( 'We could not find: %s. Are you sure this is the correct URL?', 'wp-migrate-db' ), $_POST['url'] );
 				$url_bits = parse_url( $_POST['url'] );
 				if( strstr( $_POST['url'], 'dev.' ) || strstr( $_POST['url'], '.dev' ) || ! strstr( $url_bits['host'], '.' ) ) {
 					$this->error .= '<br />';
 					if( $_POST['intent'] == 'pull' ) {
-						$this->error .= __( 'It appears that you might be trying to pull from a local environment. This will not work if <u>this</u> website happens to be located on a remote server, it would be impossible for this server to contact your local environment.', 'wp-migrate-db-pro' );
+						$this->error .= __( 'It appears that you might be trying to pull from a local environment. This will not work if <u>this</u> website happens to be located on a remote server, it would be impossible for this server to contact your local environment.', 'wp-migrate-db' );
 					}
 					else {
-						$this->error .= __( 'It appears that you might be trying to push to a local environment. This will not work if <u>this</u> website happens to be located on a remote server, it would be impossible for this server to contact your local environment.', 'wp-migrate-db-pro' );
+						$this->error .= __( 'It appears that you might be trying to push to a local environment. This will not work if <u>this</u> website happens to be located on a remote server, it would be impossible for this server to contact your local environment.', 'wp-migrate-db' );
 					}
 				}
 			}
 			else {
-				$this->error = sprintf( __( 'The connection failed, an unexpected error occurred, please contact support. (#121 - scope: %s)', 'wp-migrate-db-pro' ), $scope );
+				$this->error = sprintf( __( 'The connection failed, an unexpected error occurred, please contact support. (#121 - scope: %s)', 'wp-migrate-db' ), $scope );
 			}
 			$this->log_error( $this->error, $response );
 			return false;
@@ -177,12 +177,12 @@ class WPMDBPro_Base {
 				return $this->retry_remote_post( $url, $data, $scope, $args, $expecting_serial );
 			}
 			else if( $response['response']['code'] == '401' ) {
-				$this->error = __( 'The remote site is protected with Basic Authentication. Please enter the username and password above to continue. (401 Unauthorized)', 'wp-migrate-db-pro' );
+				$this->error = __( 'The remote site is protected with Basic Authentication. Please enter the username and password above to continue. (401 Unauthorized)', 'wp-migrate-db' );
 				$this->log_error( $this->error, $response );
 				return false;
 			}
 			else {
-				$this->error = sprintf( __( 'Unable to connect to the remote server, please check the connection details - %1$s %2$s (#129 - scope: %3$s)', 'wp-migrate-db-pro' ), $response['response']['code'], $response['response']['message'], $scope );
+				$this->error = sprintf( __( 'Unable to connect to the remote server, please check the connection details - %1$s %2$s (#129 - scope: %3$s)', 'wp-migrate-db' ), $response['response']['code'], $response['response']['message'], $scope );
 				$this->log_error( $this->error, $response );
 				return false;
 			}
@@ -191,7 +191,7 @@ class WPMDBPro_Base {
 			if( strpos( $url, 'https://' ) === 0 && $scope == 'ajax_verify_connection_to_remote_site' ) {
 				return $this->retry_remote_post( $url, $data, $scope, $args, $expecting_serial );
 			}
-			$this->error = __( 'There was a problem with the AJAX request, we were expecting a serialized response, instead we received:<br />', 'wp-migrate-db-pro' ) . htmlentities( $response['body'] );
+			$this->error = __( 'There was a problem with the AJAX request, we were expecting a serialized response, instead we received:<br />', 'wp-migrate-db' ) . htmlentities( $response['body'] );
 			$this->log_error( $this->error, $response );
 			return false;
 		}
@@ -199,7 +199,7 @@ class WPMDBPro_Base {
 			if( strpos( $url, 'https://' ) === 0 && $scope == 'ajax_verify_connection_to_remote_site' ) {
 				return $this->retry_remote_post( $url, $data, $scope, $args, $expecting_serial );
 			}
-			$this->error = sprintf( __( 'WP Migrate DB Pro does not seem to be installed or active on the remote site. (#131 - scope: %s)', 'wp-migrate-db-pro' ), $scope );
+			$this->error = sprintf( __( 'WP Migrate DB Pro does not seem to be installed or active on the remote site. (#131 - scope: %s)', 'wp-migrate-db' ), $scope );
 			$this->log_error( $this->error, $response );
 			return false;
 		}
@@ -356,7 +356,7 @@ class WPMDBPro_Base {
 			$this->log_error( print_r( $response, true ) );
 			$disable_ssl_url = network_admin_url( $this->plugin_base . '&nonce=' . wp_create_nonce( 'wpmdb-disable-ssl' ) . '&wpmdb-disable-ssl=1' );
 			$connection_failed_message = '<div class="updated warning inline-message">';
- 			$connection_failed_message .= sprintf( __( '<strong>Could not connect to deliciousbrains.com</strong> &mdash; You will not receive update notifications or be able to activate your license until this is fixed. This issue is often caused by an improperly configured SSL server (https). We recommend <a href="%1$s" target="_blank">fixing the SSL configuration on your server</a>, but if you need a quick fix you can:<p><a href="%2$s" class="temporarily-disable-ssl button">Temporarily disable SSL for connections to deliciousbrains.com</a></p>', 'wp-migrate-db-pro' ), 'https://deliciousbrains.com/wp-migrate-db-pro/documentation/#could-no-connect', $disable_ssl_url );
+ 			$connection_failed_message .= sprintf( __( '<strong>Could not connect to deliciousbrains.com</strong> &mdash; You will not receive update notifications or be able to activate your license until this is fixed. This issue is often caused by an improperly configured SSL server (https). We recommend <a href="%1$s" target="_blank">fixing the SSL configuration on your server</a>, but if you need a quick fix you can:<p><a href="%2$s" class="temporarily-disable-ssl button">Temporarily disable SSL for connections to deliciousbrains.com</a></p>', 'wp-migrate-db' ), 'https://deliciousbrains.com/wp-migrate-db-pro/documentation/#could-no-connect', $disable_ssl_url );
  			$connection_failed_message .= '</div>';
 			return json_encode( array( 'errors' => array( 'connection_failed' => $connection_failed_message ) ) );
 		}
@@ -377,7 +377,7 @@ class WPMDBPro_Base {
 		$data = wp_remote_get( $url, array( 'timeout' => 30 ) );
 
 		if ( is_wp_error( $data ) || 200 != $data['response']['code'] ) {
-			echo '<p>' . __( 'Could not retrieve version details. Please try again.', 'wp-migrate-db-pro' ) . '</p>';
+			echo '<p>' . __( 'Could not retrieve version details. Please try again.', 'wp-migrate-db' ) . '</p>';
 		}
 		else {
 			echo $data['body'];
@@ -409,9 +409,9 @@ class WPMDBPro_Base {
 
 		$new_version = '';
 		if ( version_compare( $installed_version, $latest_version, '<' ) ) {
-			$new_version = __( 'There is a new version of ' . $this->plugin_title . ' available.', 'wp-migrate-db-pro' );
+			$new_version = __( 'There is a new version of ' . $this->plugin_title . ' available.', 'wp-migrate-db' );
 			$new_version .= ' <a class="thickbox" title="' . $this->plugin_title . '" href="plugin-install.php?tab=plugin-information&plugin=' . rawurlencode( $this->plugin_slug ) . '&TB_iframe=true&width=640&height=808">';
-			$new_version .= sprintf( __( 'View version %s details', 'wp-migrate-db-pro' ), $latest_version ) . '</a>.';
+			$new_version .= sprintf( __( 'View version %s details', 'wp-migrate-db' ), $latest_version ) . '</a>.';
 		}
 
 		if ( !$new_version && !empty( $licence ) ) {
@@ -419,16 +419,16 @@ class WPMDBPro_Base {
 		}
 
 		if( empty( $licence ) ) {
-			$settings_link = sprintf( '<a href="%s">%s</a>', network_admin_url( $this->plugin_base ) . '#settings', __( 'Settings', 'wp-migrate-db-pro' ) );
+			$settings_link = sprintf( '<a href="%s">%s</a>', network_admin_url( $this->plugin_base ) . '#settings', __( 'Settings', 'wp-migrate-db' ) );
 			if ( $new_version ) {
-				$message = sprintf( __( 'To update, go to %1$s and enter your license key. If you don\'t have a license key, you may <a href="%2$s">purchase one</a>.', 'wp-migrate-db-pro' ), $settings_link, 'http://deliciousbrains.com/wp-migrate-db-pro/pricing/' );
+				$message = sprintf( __( 'To update, go to %1$s and enter your license key. If you don\'t have a license key, you may <a href="%2$s">purchase one</a>.', 'wp-migrate-db' ), $settings_link, 'http://deliciousbrains.com/wp-migrate-db-pro/pricing/' );
 			}
 			else {
-				$message = sprintf( __( 'To finish activating %1$s, please go to %2$s and enter your license key. If you don\'t have a license key, you may <a href="%3$s">purchase one</a>.', 'wp-migrate-db-pro' ), $this->plugin_title, $settings_link, 'http://deliciousbrains.com/wp-migrate-db-pro/pricing/' );
+				$message = sprintf( __( 'To finish activating %1$s, please go to %2$s and enter your license key. If you don\'t have a license key, you may <a href="%3$s">purchase one</a>.', 'wp-migrate-db' ), $this->plugin_title, $settings_link, 'http://deliciousbrains.com/wp-migrate-db-pro/pricing/' );
 			}
 		}
 		elseif ( $licence_problem ) {
-			$message = array_shift( $licence_response['errors'] ) . sprintf( ' <a href="#" class="check-my-licence-again">%s</a>', __( 'Check my license again', 'wp-migrate-db-pro' ) );
+			$message = array_shift( $licence_response['errors'] ) . sprintf( ' <a href="#" class="check-my-licence-again">%s</a>', __( 'Check my license again', 'wp-migrate-db' ) );
 		}
 		else {
 			return;
@@ -475,7 +475,7 @@ class WPMDBPro_Base {
 		$data = @file_get_contents( $response['filename'] );
 
 		if ( !$data ) {
-			return new WP_Error( 'wpmdbpro_download_error_empty', sprintf( __( 'Error retrieving download from deliciousbrain.com. Please try again or download manually from <a href="%1$s">%2$s</a>.', 'wp-migrate-db-pro' ), 'https://deliciousbrains.com/my-account/', __( 'My Account', 'wp-migrate-db-pro' ) ) );
+			return new WP_Error( 'wpmdbpro_download_error_empty', sprintf( __( 'Error retrieving download from deliciousbrain.com. Please try again or download manually from <a href="%1$s">%2$s</a>.', 'wp-migrate-db' ), 'https://deliciousbrains.com/my-account/', __( 'My Account', 'wp-migrate-db' ) ) );
 		}
 
 		$decoded_data = json_decode( $data, true );
@@ -506,8 +506,8 @@ class WPMDBPro_Base {
 	function is_licence_expired( $skip_transient_check = false ) {
 		$licence = $this->get_licence_key();
 		if( empty( $licence ) ) {
-			$settings_link = sprintf( '<a href="%s">%s</a>', network_admin_url( $this->plugin_base ) . '#settings', __( 'Settings', 'wp-migrate-db-pro' ) );
-			$message = sprintf( __( 'To finish activating WP Migrate DB Pro, please go to %1$s and enter your license key. If you don\'t have a license key, you may <a href="%2$s">purchase one</a>.', 'wp-migrate-db-pro' ), $settings_link, 'http://deliciousbrains.com/wp-migrate-db-pro/pricing/' );
+			$settings_link = sprintf( '<a href="%s">%s</a>', network_admin_url( $this->plugin_base ) . '#settings', __( 'Settings', 'wp-migrate-db' ) );
+			$message = sprintf( __( 'To finish activating WP Migrate DB Pro, please go to %1$s and enter your license key. If you don\'t have a license key, you may <a href="%2$s">purchase one</a>.', 'wp-migrate-db' ), $settings_link, 'http://deliciousbrains.com/wp-migrate-db-pro/pricing/' );
 			return array( 'errors' => array( 'no_licence' => $message ) );
 		}
 
@@ -715,8 +715,8 @@ class WPMDBPro_Base {
 
 		if ( version_compare( $installed_version, $latest_version, '<' ) ) { ?>
 			<div style="display: block;" class="updated warning inline-message">
-					<strong><?php _e( 'Update Available', 'wp-migrate-db-pro' ); ?></strong> &mdash;
-					<?php printf( __( '%1$s %2$s is now available. You currently have %3$s installed. <a href="%4$s">%5$s</a>', 'wp-migrate-db-pro' ), $this->plugin_title, $latest_version, $installed_version, $update_url, __( 'Update Now', 'wp-migrate-db-pro' ) ); ?>
+					<strong><?php _e( 'Update Available', 'wp-migrate-db' ); ?></strong> &mdash;
+					<?php printf( __( '%1$s %2$s is now available. You currently have %3$s installed. <a href="%4$s">%5$s</a>', 'wp-migrate-db' ), $this->plugin_title, $latest_version, $installed_version, $update_url, __( 'Update Now', 'wp-migrate-db' ) ); ?>
 			</div>
 			<?php
 		}
@@ -744,7 +744,7 @@ class WPMDBPro_Base {
 	function get_licence_status_message() {
 		$licence = $this->get_licence_key();
 		if( empty( $licence ) ) {
-			$message = sprintf( __( '<strong>Activate Your License</strong> &mdash; Please <a href="#" class="%s">enter your license key</a> to enable push and pull.', 'wp-migrate-db-pro' ), 'js-action-link enter-licence' );
+			$message = sprintf( __( '<strong>Activate Your License</strong> &mdash; Please <a href="#" class="%s">enter your license key</a> to enable push and pull.', 'wp-migrate-db' ), 'js-action-link enter-licence' );
 			return $message;
 		}
 
@@ -758,23 +758,23 @@ class WPMDBPro_Base {
 		$check_licence_again_url = network_admin_url( $this->plugin_base . '&nonce=' . wp_create_nonce( 'wpmdb-check-licence' ) . '&wpmdb-check-licence=1' );
 		if ( isset( $errors['connection_failed'] ) ) {
 			$disable_ssl_url = network_admin_url( $this->plugin_base . '&nonce=' . wp_create_nonce( 'wpmdb-disable-ssl' ) . '&wpmdb-disable-ssl=1' );
- 			$message = sprintf( __( '<strong>Could not connect to deliciousbrains.com</strong> &mdash; You will not receive update notifications or be able to activate your license until this is fixed. This issue is often caused by an improperly configured SSL server (https). We recommend <a href="%s" target="_blank">fixing the SSL configuration on your server</a>, but if you need a quick fix you can:', 'wp-migrate-db-pro' ), 'https://deliciousbrains.com/wp-migrate-db-pro/documentation/#could-no-connect' );
-			$message .= sprintf( '<p><a href="%1$s" class="temporarily-disable-ssl button">%2$s</a></p>', $disable_ssl_url, __(  'Temporarily disable SSL for connections to deliciousbrains.com', 'wp-migrate-db-pro' ) );
+ 			$message = sprintf( __( '<strong>Could not connect to deliciousbrains.com</strong> &mdash; You will not receive update notifications or be able to activate your license until this is fixed. This issue is often caused by an improperly configured SSL server (https). We recommend <a href="%s" target="_blank">fixing the SSL configuration on your server</a>, but if you need a quick fix you can:', 'wp-migrate-db' ), 'https://deliciousbrains.com/wp-migrate-db-pro/documentation/#could-no-connect' );
+			$message .= sprintf( '<p><a href="%1$s" class="temporarily-disable-ssl button">%2$s</a></p>', $disable_ssl_url, __(  'Temporarily disable SSL for connections to deliciousbrains.com', 'wp-migrate-db' ) );
 		} elseif ( isset( $errors['subscription_cancelled'] ) ) {
-			$message = sprintf( __( '<strong>Your License Was Cancelled</strong> &mdash; Please visit <a href="%s" target="_blank">My Account</a> to renew or upgrade your license and enable push and pull.', 'wp-migrate-db-pro' ), 'https://deliciousbrains.com/my-account/' );
-			$message .= sprintf( '<br /><a href="%s">%s</a>', $check_licence_again_url, __( 'Check my license again', 'wp-migrate-db-pro' ) );
+			$message = sprintf( __( '<strong>Your License Was Cancelled</strong> &mdash; Please visit <a href="%s" target="_blank">My Account</a> to renew or upgrade your license and enable push and pull.', 'wp-migrate-db' ), 'https://deliciousbrains.com/my-account/' );
+			$message .= sprintf( '<br /><a href="%s">%s</a>', $check_licence_again_url, __( 'Check my license again', 'wp-migrate-db' ) );
 		} elseif ( isset( $errors['subscription_expired'] ) ) {
-			$message = sprintf( __( '<strong>Your License Has Expired</strong> &mdash; Please visit <a href="%s" target="_blank">My Account</a> to purchase a new license and enable push and pull.', 'wp-migrate-db-pro' ), 'https://deliciousbrains.com/my-account/' );
-			$message .= sprintf( '<br /><a href="%s">%s</a>', $check_licence_again_url, __( 'Check my license again', 'wp-migrate-db-pro' ) );
+			$message = sprintf( __( '<strong>Your License Has Expired</strong> &mdash; Please visit <a href="%s" target="_blank">My Account</a> to purchase a new license and enable push and pull.', 'wp-migrate-db' ), 'https://deliciousbrains.com/my-account/' );
+			$message .= sprintf( '<br /><a href="%s">%s</a>', $check_licence_again_url, __( 'Check my license again', 'wp-migrate-db' ) );
 		} elseif ( isset( $errors['no_activations_left'] ) ) {
-			$message = sprintf( __( '<strong>No Activations Left</strong> &mdash; Please visit <a href="%s" target="_blank">My Account</a> to upgrade your license or deactivate a previous activation and enable push and pull.', 'wp-migrate-db-pro' ), 'https://deliciousbrains.com/my-account/' );
-			$message .= sprintf( ' <a href="%s">%s</a>', $check_licence_again_url, __( 'Check my license again', 'wp-migrate-db-pro' ) );
+			$message = sprintf( __( '<strong>No Activations Left</strong> &mdash; Please visit <a href="%s" target="_blank">My Account</a> to upgrade your license or deactivate a previous activation and enable push and pull.', 'wp-migrate-db' ), 'https://deliciousbrains.com/my-account/' );
+			$message .= sprintf( ' <a href="%s">%s</a>', $check_licence_again_url, __( 'Check my license again', 'wp-migrate-db' ) );
 		} elseif ( isset( $errors['licence_not_found'] ) ) {
-			$message = sprintf( __( '<strong>Your License Was Not Found</strong> &mdash; Perhaps you made a typo when defining your WPMDB_LICENCE constant in your wp-config.php? Please visit <a href="%s" target="_blank">My Account</a> to double check your license key.', 'wp-migrate-db-pro' ), 'https://deliciousbrains.com/my-account/' );
-			$message .= sprintf( ' <a href="%s">%s</a>', $check_licence_again_url, __( 'Check my license again', 'wp-migrate-db-pro' ) );
+			$message = sprintf( __( '<strong>Your License Was Not Found</strong> &mdash; Perhaps you made a typo when defining your WPMDB_LICENCE constant in your wp-config.php? Please visit <a href="%s" target="_blank">My Account</a> to double check your license key.', 'wp-migrate-db' ), 'https://deliciousbrains.com/my-account/' );
+			$message .= sprintf( ' <a href="%s">%s</a>', $check_licence_again_url, __( 'Check my license again', 'wp-migrate-db' ) );
 		} else {
 			$error = reset( $errors );
-			$message = sprintf( __( '<strong>An Unexpected Error Occurred</strong> &mdash; Please contact us at <a href="%1$s">%2$s</a> and quote the following:', 'wp-migrate-db-pro' ), 'mailto:nom@deliciousbrains.com', 'nom@deliciousbrains.com' );
+			$message = sprintf( __( '<strong>An Unexpected Error Occurred</strong> &mdash; Please contact us at <a href="%1$s">%2$s</a> and quote the following:', 'wp-migrate-db' ), 'mailto:nom@deliciousbrains.com', 'nom@deliciousbrains.com' );
 			$message .= sprintf( '<p>%s</p>', $error );
 		}
 
@@ -798,14 +798,14 @@ class WPMDBPro_Base {
 		if ( defined( 'DOING_WPMDB_TESTS' ) || $this->doing_cli_migration ) return;
 		$result = check_ajax_referer( $action, 'nonce', false );
 		if ( false === $result ) {
-			$return = array( 'wpmdb_error' => 1, 'body' => sprintf( __( 'Invalid nonce for: %s', 'wp-migrate-db-pro' ), $action ) );
+			$return = array( 'wpmdb_error' => 1, 'body' => sprintf( __( 'Invalid nonce for: %s', 'wp-migrate-db' ), $action ) );
 			$this->end_ajax( json_encode( $return ) );
 		}
 
 		$cap = ( is_multisite() ) ? 'manage_network_options' : 'export';
 		$cap = apply_filters( 'wpmdb_ajax_cap', $cap );
 		if ( !current_user_can( $cap ) ) {
-			$return = array( 'wpmdb_error' => 1, 'body' => sprintf( __( 'Access denied for: %s', 'wp-migrate-db-pro' ), $action ) );
+			$return = array( 'wpmdb_error' => 1, 'body' => sprintf( __( 'Access denied for: %s', 'wp-migrate-db' ), $action ) );
 			$this->end_ajax( json_encode( $return ) );
 		}
 	}
